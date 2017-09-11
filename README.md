@@ -43,9 +43,19 @@ While I would expect a team of four students to produce a project with more feat
 ### Deliverables
 
 __Proposal:__ 
-You should provide an outline of your project and the names of the team members. The outline should have enough detail so that I can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
+Provide an outline of your project and the names of the team members. 
+The outline should have enough detail so that I can determine if it meets the minimum expectations, or if it goes too far to be reasonable by the deadline.
 This file must be named proposal.md so we can find it.
 Submit a PR to turn it in.
+
+__Evaluation:__ 
+Conduct an evaluation of your website, with 5 people.
+Sessions should be a minimum of 10 minutes per person.
+Evaluations should be semi-structured: users must perform tasks on their own without your help (i.e., observe only!).
+Allow participants to "think-aloud" to gain insights into what's going on in their mind as they use your site.
+After you've ran participants, analyze and report on your results in evaluation.md.
+A good evaluation will uncover both usability challenges as well as design challenges.
+Submit along with your final code to turn it in.
 
 There are no other scheduled checkpoints for your project. 
 You must be done in time to present before the final project demo day. 
