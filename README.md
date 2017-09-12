@@ -17,7 +17,7 @@ Additionally, you should incorporate features that you independently research, d
 ## Example Projects
 
 The following list describes a few examples of what I would consider to be good projects. 
-Excellent projects serve someone: define your users and stakeholders. 
+Excellent projects serve someone/some group: define your users and stakeholders. 
 Don't just create a webapp with a pile of features.
 I encourage you to identify projects that will have impact.
 
@@ -76,6 +76,19 @@ Presentations will occur during the final week of class.
 As for the presentations, we will take over a different room on WPI's campus, with tables.
 You'll set up and demo to folks who stop by.
 You'll demo to staff as part of your grade.
+
+Naming and URL Scheme
+---
+
+You must use a consistent naming scheme for all projects in this course.
+If we can't find it, we can't grade it.
+
+By default Heroku assigns your application a random name.
+To change it, follow [this guide](https://devcenter.heroku.com/articles/renaming-apps).
+
+All team member should deploy the project on heroku individually.
+
+The name scheme should be `fp-yourGitHubUsername`. 
 
 ## FAQs
 
