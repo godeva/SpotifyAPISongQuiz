@@ -86,7 +86,7 @@ If we can't find it, we can't grade it.
 By default Heroku assigns your application a random name.
 To change it, follow [this guide](https://devcenter.heroku.com/articles/renaming-apps).
 
-All team member should deploy the project on heroku individually.
+Only one team member needs to deploy the project on heroku.
 
 The name scheme should be `fp-yourGitHubUsername`. 
 
