@@ -1,0 +1,133 @@
+<html lang="en">
+  <head>
+    <title>CS4241 Final Project</title>
+    <meta charset="utf-8">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <script src="js/scripts.js"></script>
+  </head>
+  <body>
+    <div class = "container">
+      <div id="left"></div>
+      <div id="right"></div>
+      <div id="top"></div>
+      <div id="bottom"></div>
+
+      <div class ="center">
+        <h1 class ="header">Please vote for a playlist!</h1>
+        <table class ="votes">
+        <tr>
+            <td>
+                <img class = "playlist" src="../images/turnt.jpg">
+                
+            </td>
+             <td>
+                <img class = "playlist" src="../images/top.jpg">
+                
+            </td>
+             <td>
+                <img class = "playlist" src="../images/hot.jpg">
+                
+            </td>
+             <td>
+                <img class = "playlist" src="../images/solid.jpg">
+                
+            </td>
+             <td>
+                <img class = "playlist" src="../images/fresh.jpg">
+                
+            </td>
+             <td>
+                <img class = "playlist" src="../images/turnt.jpg">
+               
+            </td>
+        </tr>
+    
+        </table>
+        <br>
+        <div id="countdown">
+
+        </div>
+
+        <hr></hr>
+        
+
+    <table class="table">
+    <thead>
+      <tr style="width: 60%">
+        <th style="width:50px" >Position</th>
+        <th style="width: 250px">Username</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+      <tr class ="success">
+        <td>1</td>
+        <td>Cuphead</td>
+      </tr>      
+      <tr class="danger">
+        <td>2</td>
+        <td>Empty</td>
+      </tr>
+      <tr class="danger">
+        <td>3</td>
+        <td>Empty</td>
+      </tr>
+      <tr class="danger">
+        <td>4</td>
+        <td>Emptye</td>
+      </tr>
+      <tr class="danger">
+        <td>5</td>
+        <td>Empty</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <a href ="match.html"><button type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button></a>
+
+
+ </div>
+
+
+</div>
+
+
+      
+  <script>
+    function countdown( elementName, minutes, seconds ){
+    var element, endTime, hours, mins, msLeft, time;
+
+    function twoDigits( n )
+    {
+        return (n <= 9 ? "0" + n : n);
+    }
+
+    function updateTimer()
+    {
+        msLeft = endTime - (+new Date);
+        if ( msLeft < 1000 ) {
+            element.innerHTML = "countdown's over!";
+        } else {
+            time = new Date( msLeft );
+            hours = time.getUTCHours();
+            mins = time.getUTCMinutes();
+            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+        }
+    }
+
+    element = document.getElementById( elementName );
+    endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+    updateTimer();
+}
+
+countdown( "countdown", 1, 5 );
+    
+
+  </script>
+
+  </body>
+</html>
