@@ -6,9 +6,12 @@ var express = require('express')
 , qs = require('querystring')
 , port = 8080
 
+// active players
+// player definition: {name: string, currentScore: int, bestScore: int}
 var playerList = []
 
 const app = express()
+
 
 app.use(session({
   secret: 'keyboard meow',
@@ -34,23 +37,29 @@ app.post('/initUsername', function (req, res) {
     // session is still on
     if (req.session.username) {
       res.send('on')
-      return
-    }
-    username = postdata
-    // check if username already exist
-    var exist = false
-    playerList.forEach(function(item, index, array) {
-      if (item === username) {
-        res.send('exist')
-        exist = true
-        return
+    } else if (postdata) {
+      username = postdata
+      // check if username is already used
+      var exist = false
+      playerList.forEach(function(item, index, array) {
+        if (item.name === username) {
+          exist = true
+          return
+        }
+      });
+      // if not exist
+      if (!exist) {
+        req.session.username = username
+        req.session.currentScore = 0
+        req.session.bestScore = 0
+        console.log(username + ' joined')
+        res.send('good')
+      } else {
+        console.log(username + ' already exist')
+        res.send('used')
       }
-    });
-    // if not exist
-    if (!exist) {
-      req.session.username = username
-      console.log(username + ' joined')
-      res.send('good')
+    } else {
+      res.send('noname')
     }
   })
 })
@@ -61,56 +70,56 @@ app.get('/playerList', function (req, res) {
 })
 // POST: player logs out
 app.post('/logOut', function (req, res) {
-  if (req.session.username) {
-    var i = -1
-    playerList.forEach(function(item, index, array) {
-      if (item === username) {
-        i = index
-        return
-      }
-    });
-    if (i >= 0) {
-      playerList.splice(i, 1)
+  var name = req.session.username
+  if (name) {
+    var index = indexOf (name, playerList) 
+    if (index >= 0) {
+      playerList.splice(index, 1)
       res.send('good')
-      console.log(req.session.username + ' logged out')
+      console.log(name + ' logged out')
     } else {
       // user is already logged out
       res.send('bad')
-      console.log(req.session.username + ' log out failed: already logged out')
     }
   } else {
     // username not initialized
     res.send('timeout')
-    console.log("log out failed: session timeout")
   }
 })
 // POST: player logs in
 app.post('/logIn', function (req, res) {
-  if (req.session.username) {
-    var i = -1
-    playerList.forEach(function(item, index, array) {
-      if (item === username) {
-        i = index
-        return
-      }
-    })
-    if (i >= 0) {
+  var name = req.session.username
+  var cScore = req.session.currentScore
+  var bScore = req.session.bestScore
+  if (name) {
+    var index = indexOf (name, playerList) 
+    if (index >= 0) {
       res.send('bad')
-      console.log(req.session.username + ' log in failed: already logged in')
+      console.log(name + ' log in failed: already logged in')
     } else {
-      playerList.push(req.session.username)
+      playerList.push({name: name, currentScore: cScore, bestScore: bScore})
       res.send('good')
-      console.log(req.session.username + ' logged in')
+      console.log(name + ' logged in')
     }
   } else {
     res.send('timeout')
-    console.log('log in failed: no session data')
+    console.log('no session data, redirect to index')
   }
 })
 
 app.listen(process.env.PORT || port)
 console.log('listening on ' + port)
 
+function indexOf (name, list) {
+  var i = -1
+  list.forEach(function(item, index, array) {
+      if (item.name === name) {
+        i = index
+        return
+      }
+  });
+  return i;
+}
 // Jackson's server
 /*var http = require('http')
   , fs   = require('fs')

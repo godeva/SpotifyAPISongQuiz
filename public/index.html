@@ -31,15 +31,11 @@
   
   <script>
 // HF
-
-window.onload = function(event) {
-	newXHRRequest('POST', '/initUsername', initUsernameSender, function(req){
-	    if (req.responseText === 'on') {
-	    	window.location.href = 'lobby.html'
-	    }
-	})
-  	return null
-}
+newXHRRequest('POST', '/initUsername', initUsernameSender, function(req){
+	if (req.responseText === 'on') {
+	   	window.location.href = 'lobby.html'
+	}
+})
 
 // definition
 function initUsername () {

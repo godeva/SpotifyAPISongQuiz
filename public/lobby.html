@@ -97,6 +97,15 @@
 
       
   <script>
+
+newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
+  if (req.responseText === 'timeout') {
+    window.location.href = 'index.html'
+  } else if (req.responseText === 'good'){
+    getPlayerList(logPlayerList)
+  }
+})
+
 countdown( "countdown", 1, 5 );
 
 // definitions
@@ -105,21 +114,21 @@ countdown( "countdown", 1, 5 );
 
     function twoDigits( n )
     {
-        return (n <= 9 ? "0" + n : n);
+      return (n <= 9 ? "0" + n : n);
     }
 
     function updateTimer()
     {
-        msLeft = endTime - (+new Date);
-        if ( msLeft < 1000 ) {
-            element.innerHTML = "countdown's over!";
-        } else {
-            time = new Date( msLeft );
-            hours = time.getUTCHours();
-            mins = time.getUTCMinutes();
-            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
-            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
-        }
+      msLeft = endTime - (+new Date);
+      if ( msLeft < 1000 ) {
+        element.innerHTML = "countdown's over!";
+      } else {
+        time = new Date( msLeft );
+        hours = time.getUTCHours();
+        mins = time.getUTCMinutes();
+        element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+        setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+      }
     }
 
     element = document.getElementById( elementName );
@@ -129,17 +138,6 @@ countdown( "countdown", 1, 5 );
 
 // HF
 // log out before closing the browser
-window.onload = function(event) {
-  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-    if (req.responseText === 'timeout') {
-      window.location.href = 'index.html'
-    } else if (req.responseText === 'good'){
-      getPlayerList(logPlayerList)
-    }
-  })
-  return null
-}
-
 window.onbeforeunload = function(event) {
   newXHRRequest('POST', '/logOut', function(req){req.send('logout')}, function(req){})
   return null;
@@ -155,13 +153,7 @@ function getPlayerList (callback) {
 }
 
 function logPlayerList (list) {
-  list.forEach(function(item, index, array) {
-    console.log(item)
-  })
-}
-
-function enterMatch () {
-  window.location.href = 'lobby.html'
+  console.log(list)
 }
   </script>
 
