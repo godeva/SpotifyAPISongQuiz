@@ -1,0 +1,129 @@
+div.container {
+    background-image: url('../images/bg.jpg');
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    border-radius: 25px;
+}
+
+div.spot {
+    width: 650px;
+    height: 250px;
+    background-color: white;
+    opacity: 0.7;
+    border-radius: 25px;
+    position: absolute;
+    top:0;
+    bottom:120;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    padding: 20px;
+}
+
+div.username {
+    width: 650px;
+    height: 100px;
+    position: absolute;
+    text-align: center;
+    top: 350;
+    bottom:0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    padding: 20px;
+}
+
+
+
+img.spot {
+    max-width: 500px;
+    max-height: 150px;
+    margin: auto;
+    display: block;
+}
+
+#top, #bottom, #left, #right {
+    background-color:whitesmoke;
+    opacity:0.6;
+    position: fixed;    
+}
+
+#left, #right {
+    top: 0; bottom: 0;
+	width: 15px;
+}
+
+#left { left: 0; }
+        
+#right { right: 0; }
+		
+#top, #bottom {
+    left: 0; right: 0;
+	height: 15px;
+}
+        
+#top { top: 0; }
+#bottom { bottom: 0; }
+
+h1.header { 
+    color: grey; font-family: Trebuchet MS; font-size: 34px; font-weight: 300; line-height: 40px; margin: 0 0 16px; 
+    font-family: headerFont;
+} 
+
+
+div.center {
+    text-align: center;
+    padding: 20px;
+
+}
+
+table.votes {
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: center;
+    border-spacing: 10px;
+}
+
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: noshade;
+    border-width: 1px;
+    border-color: grey;
+    width: 90%;
+    
+} 
+
+img.playlist {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+#countdown {
+
+    border-radius: 25px;
+    color: black;
+    font-size: 20px;
+    text-align: center;
+    
+}
+
+table.yuhh {
+    width: 60%;
+    padding-left: 300px;
+    padding-right: 300px;
+    padding-top: 0;
+    padding-bottom: 0;
+
+}
+
+
