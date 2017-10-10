@@ -86,7 +86,7 @@
   </table>
 
 
-  <a href ="match.html"><button type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button></a>
+  <button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
 
 
  </div>
@@ -97,7 +97,11 @@
 
       
   <script>
-    function countdown( elementName, minutes, seconds ){
+countdown( "countdown", 1, 5 );
+getPlayerList(logPlayerList)
+
+// definitions
+  function countdown( elementName, minutes, seconds ){
     var element, endTime, hours, mins, msLeft, time;
 
     function twoDigits( n )
@@ -122,11 +126,43 @@
     element = document.getElementById( elementName );
     endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
     updateTimer();
+  }
+
+// HF
+// log out before closing the browser
+/*
+window.onbeforeload = function(event) {
+  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
+    if (req.responseText === 'timeout') {
+      window.location.href = 'index.html'
+    }
+  })
+  return null
 }
 
-countdown( "countdown", 1, 5 );
-    
+window.onbeforeunload = function(event) {
+  newXHRRequest('POST', '/logOut', function(req){req.send('logout')}, function(req){})
+  return null;
+};
+*/
+// get the list of current players and run callback after get is completed
+function getPlayerList (callback) {
+  newXHRRequest('GET', '/playerList', function(req){req.send()}, function(req) {
+    var playerList = JSON.parse(req.responseText)
+    // do what ever with the list
+    callback(playerList)
+  })
+}
 
+function logPlayerList (list) {
+  list.forEach(function(item, index, array) {
+    console.log(item)
+  })
+}
+
+function enterMatch () {
+  window.location.href = 'lobby.html'
+}
   </script>
 
   </body>

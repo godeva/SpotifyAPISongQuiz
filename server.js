@@ -1,4 +1,110 @@
-var http = require('http')
+// my server
+var express = require('express')
+, path = require('path')
+, session = require('express-session')
+, fs = require('fs')
+, qs = require('querystring')
+, port = 8080
+
+var playerList = []
+
+const app = express()
+
+app.use(session({
+  secret: 'keyboard meow',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 60000 * 60 * 24 },
+  rolling: true
+}))
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+// POST: store new player into playerList and store name in session
+app.post('/initUsername', function (req, res) {
+  var postdata = ''
+  req.on('data', function(d) {
+    postdata += d
+    if (postdata.length > 1e6) { 
+      // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+      request.connection.destroy();
+    }
+  })
+  req.on('end', function() {
+    username = postdata
+    // check if username already exist
+    playerList.forEach(function(item, index, array) {
+      if (item === username) {
+        res.send('bad')
+        return
+      }
+    });
+    // if not
+    playerList.push(username)
+    req.session.username = username
+    console.log(username + ' joined the game')
+    res.send('good')
+  })
+})
+// GET: send a JSON of playerList
+app.get('/playerList', function (req, res) {
+  var content = JSON.stringify(playerList)
+  res.send(content)
+})
+// POST: player logs out
+app.post('/logOut', function (req, res) {
+  if (req.session.username) {
+    var i = -1
+    playerList.forEach(function(item, index, array) {
+      if (item === username) {
+        i = index
+        return
+      }
+    });
+    if (i >= 0) {
+      playerList.splice(i, 1)
+      res.send('good')
+      console.log(req.session.username + ' logged out')
+    } else {
+      // user is already logged out
+      res.send('bad')
+      console.log(req.session.username + ' log out failed: already logged out')
+    }
+  } else {
+    // username not initialized
+    res.send('timeout')
+    console.log("log out failed: session timeout")
+  }
+})
+// POST: player logs in
+app.post('/logIn', function (req, res) {
+  if (req.session.username) {
+    var i = -1
+    playerList.forEach(function(item, index, array) {
+      if (item === username) {
+        i = index
+        return
+      }
+    })
+    if (i >= 0) {
+      res.send('bad')
+      console.log(req.session.username + ' log in failed: already logged in')
+    } else {
+      playerList.push(req.session.username)
+      res.send('good')
+      console.log(req.session.username + ' logged in')
+    }
+  } else {
+    res.send('timeout')
+    console.log('log in failed: session timeout')
+  }
+})
+
+app.listen(process.env.PORT || port)
+console.log('listening on ' + port)
+
+// Jackson's server
+/*var http = require('http')
   , fs   = require('fs')
   , url  = require('url')
   , port = 8080;
@@ -63,3 +169,4 @@ function sendFile(res, filename, contentType) {
   })
 
 }
+*/
