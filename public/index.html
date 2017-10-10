@@ -16,7 +16,7 @@
 
       <div class ="spot">
         <br>
-        <img class = "spot" src="../images/spot.png">
+        <img class = "spot" src="images/spot.png">
       </div>
       <div class ="username">
         <form class="form-inline">
@@ -31,15 +31,6 @@
   
   <script>
 // HF
-window.onbeforeload = function(event) {
-  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-    if (req.responseText === 'good') {
-      window.location.href = 'lobby.html'
-    }
-  })
-  return null
-}
-
 // definition
 function initUsername () {
 	newXHRRequest('POST', '/initUsername', initUsernameSender, initUsernameHandler)
@@ -56,9 +47,10 @@ function initUsernameSender (req) {
 function initUsernameHandler (req) {
 	//var T = JSON.parse(req.responseText);
 	var rt = req.responseText
+  console.log(rt)
     if (rt === 'good') {
     	window.location.href = 'lobby.html'
-    } else {
+    } else if (rt === 'name used') {
     	// username already used
     	console.log('playername already used')
     }

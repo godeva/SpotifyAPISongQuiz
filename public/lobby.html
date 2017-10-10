@@ -19,27 +19,27 @@
         <table class ="votes">
         <tr>
             <td>
-                <img class = "playlist" src="../images/turnt.jpg">
+                <img class = "playlist" src="images/turnt.jpg">
                 
             </td>
              <td>
-                <img class = "playlist" src="../images/top.jpg">
+                <img class = "playlist" src="images/top.jpg">
                 
             </td>
              <td>
-                <img class = "playlist" src="../images/hot.jpg">
+                <img class = "playlist" src="images/hot.jpg">
                 
             </td>
              <td>
-                <img class = "playlist" src="../images/solid.jpg">
+                <img class = "playlist" src="images/solid.jpg">
                 
             </td>
              <td>
-                <img class = "playlist" src="../images/fresh.jpg">
+                <img class = "playlist" src="images/fresh.jpg">
                 
             </td>
              <td>
-                <img class = "playlist" src="../images/turnt.jpg">
+                <img class = "playlist" src="images/turnt.jpg">
                
             </td>
         </tr>
@@ -97,8 +97,14 @@
 
       
   <script>
+
+newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
+  if (req.responseText === 'good'){
+    getPlayerList(logPlayerList)
+  }
+})
+
 countdown( "countdown", 1, 5 );
-getPlayerList(logPlayerList)
 
 // definitions
   function countdown( elementName, minutes, seconds ){
@@ -106,21 +112,21 @@ getPlayerList(logPlayerList)
 
     function twoDigits( n )
     {
-        return (n <= 9 ? "0" + n : n);
+      return (n <= 9 ? "0" + n : n);
     }
 
     function updateTimer()
     {
-        msLeft = endTime - (+new Date);
-        if ( msLeft < 1000 ) {
-            element.innerHTML = "countdown's over!";
-        } else {
-            time = new Date( msLeft );
-            hours = time.getUTCHours();
-            mins = time.getUTCMinutes();
-            element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
-            setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
-        }
+      msLeft = endTime - (+new Date);
+      if ( msLeft < 1000 ) {
+        element.innerHTML = "countdown's over!";
+      } else {
+        time = new Date( msLeft );
+        hours = time.getUTCHours();
+        mins = time.getUTCMinutes();
+        element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+        setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+      }
     }
 
     element = document.getElementById( elementName );
@@ -130,21 +136,11 @@ getPlayerList(logPlayerList)
 
 // HF
 // log out before closing the browser
-/*
-window.onbeforeload = function(event) {
-  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-    if (req.responseText === 'timeout') {
-      window.location.href = 'index.html'
-    }
-  })
-  return null
-}
-
 window.onbeforeunload = function(event) {
   newXHRRequest('POST', '/logOut', function(req){req.send('logout')}, function(req){})
   return null;
 };
-*/
+
 // get the list of current players and run callback after get is completed
 function getPlayerList (callback) {
   newXHRRequest('GET', '/playerList', function(req){req.send()}, function(req) {
@@ -155,13 +151,7 @@ function getPlayerList (callback) {
 }
 
 function logPlayerList (list) {
-  list.forEach(function(item, index, array) {
-    console.log(item)
-  })
-}
-
-function enterMatch () {
-  window.location.href = 'lobby.html'
+  console.log(list)
 }
   </script>
 
