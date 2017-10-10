@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "animate.css": "^3.5.2",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
     "particles.js": "^2.0.0"
   }
 }

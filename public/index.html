@@ -24,14 +24,45 @@
           <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Enter a username...">
         </form>
         <br>
-        <a href ="lobby.html"><button type="button" class="btn btn-info" style= "width: 150px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Join</button></a>
+        <button onclick="initUsername()" type="button" class="btn btn-info" style= "width: 150px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Join</button>
       </div>
 
     </div>
   
   <script>
-    
+// HF
+window.onbeforeload = function(event) {
+  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
+    if (req.responseText === 'good') {
+      window.location.href = 'lobby.html'
+    }
+  })
+  return null
+}
 
+// definition
+function initUsername () {
+	newXHRRequest('POST', '/initUsername', initUsernameSender, initUsernameHandler)
+}
+
+// send username
+function initUsernameSender (req) {
+	var username = document.getElementById('inlineFormInput').value
+    //req.send('name=' + username)
+    req.send(username)
+}
+
+// see if username is already occupied
+function initUsernameHandler (req) {
+	//var T = JSON.parse(req.responseText);
+	var rt = req.responseText
+    if (rt === 'good') {
+    	window.location.href = 'lobby.html'
+    } else {
+    	// username already used
+    	console.log('playername already used')
+    }
+}
   </script>
 
   </body>
