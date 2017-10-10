@@ -99,9 +99,7 @@
   <script>
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-  if (req.responseText === 'timeout') {
-    window.location.href = 'index.html'
-  } else if (req.responseText === 'good'){
+  if (req.responseText === 'good'){
     getPlayerList(logPlayerList)
   }
 })

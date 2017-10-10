@@ -21,7 +21,31 @@ app.use(session({
   rolling: true
 }))
 
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'public/static')))
+
+app.get('/index.html', indexHandler)
+
+app.get('/', indexHandler)
+
+app.get('/lobby.html', lobbyHandler)
+
+app.get('/lobby', lobbyHandler)
+
+function indexHandler (req, res) {
+	if (req.session.username) {
+		res.redirect('/lobby.html')
+	} else {
+		res.sendFile(path.join(__dirname, 'public/index.html'))
+	}
+}
+
+function lobbyHandler (req, res) {
+	if (!req.session.username) {
+		res.redirect('/index.html')
+	} else {
+		res.sendFile(path.join(__dirname, 'public/lobby.html'))
+	}
+}
 
 // POST: store new player into playerList and store name in session
 app.post('/initUsername', function (req, res) {
@@ -59,7 +83,7 @@ app.post('/initUsername', function (req, res) {
         res.send('used')
       }
     } else {
-      res.send('noname')
+      res.send('empty name')
     }
   })
 })
@@ -75,6 +99,7 @@ app.post('/logOut', function (req, res) {
     var index = indexOf (name, playerList) 
     if (index >= 0) {
       playerList.splice(index, 1)
+      console.log(playerList)
       res.send('good')
       console.log(name + ' logged out')
     } else {
