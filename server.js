@@ -9,7 +9,7 @@ var express = require('express')
 // active players
 // player definition: {name: string, currentScore: int, bestScore: int}
 var playerList = []
-
+var activeList = []
 const app = express()
 
 
@@ -32,16 +32,16 @@ app.get('/lobby.html', lobbyHandler)
 app.get('/lobby', lobbyHandler)
 
 function indexHandler (req, res) {
-	if (req.session.username) {
-		res.redirect('/lobby.html')
+	if (req.session.name) {
+		res.redirect('/lobby')
 	} else {
 		res.sendFile(path.join(__dirname, 'public/index.html'))
 	}
 }
 
 function lobbyHandler (req, res) {
-	if (!req.session.username) {
-		res.redirect('/index.html')
+	if (!req.session.name) {
+		res.redirect('/')
 	} else {
 		res.sendFile(path.join(__dirname, 'public/lobby.html'))
 	}
@@ -59,78 +59,94 @@ app.post('/initUsername', function (req, res) {
   })
   req.on('end', function() {
     // session is still on
-    if (req.session.username) {
-      res.send('on')
+    if (req.session.name) {
+      res.send('session still on')
     } else if (postdata) {
-      username = postdata
+      name = postdata
       // check if username is already used
       var exist = false
       playerList.forEach(function(item, index, array) {
-        if (item.name === username) {
+        if (item.name === name) {
           exist = true
           return
         }
       });
       // if not exist
       if (!exist) {
-        req.session.username = username
-        req.session.currentScore = 0
-        req.session.bestScore = 0
-        console.log(username + ' joined')
+
+        req.session.name = name
+      	playerList.push({name: req.session.name, currentScore: 0, bestScore: 0})
+        console.log(name + ' joined')
         res.send('good')
       } else {
-        console.log(username + ' already exist')
-        res.send('used')
+        console.log(name + ' already exist')
+        res.send('name used')
       }
     } else {
+    	console.log('empty name is not accepted')
       res.send('empty name')
     }
   })
 })
+
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
-  var content = JSON.stringify(playerList)
-  res.send(content)
+  	var content = JSON.stringify(playerList)
+  	res.send(content)
 })
-// POST: player logs out
-app.post('/logOut', function (req, res) {
-  var name = req.session.username
-  if (name) {
-    var index = indexOf (name, playerList) 
-    if (index >= 0) {
-      playerList.splice(index, 1)
-      console.log(playerList)
-      res.send('good')
-      console.log(name + ' logged out')
-    } else {
-      // user is already logged out
-      res.send('bad')
-    }
-  } else {
-    // username not initialized
-    res.send('timeout')
-  }
+app.get('/activeList', function (req, res) {
+	var content = JSON.stringify(activeList)
+  	res.send(content)
 })
 // POST: player logs in
 app.post('/logIn', function (req, res) {
-  var name = req.session.username
-  var cScore = req.session.currentScore
-  var bScore = req.session.bestScore
-  if (name) {
-    var index = indexOf (name, playerList) 
-    if (index >= 0) {
-      res.send('bad')
-      console.log(name + ' log in failed: already logged in')
-    } else {
-      playerList.push({name: name, currentScore: cScore, bestScore: bScore})
-      res.send('good')
-      console.log(name + ' logged in')
-    }
-  } else {
-    res.send('timeout')
-    console.log('no session data, redirect to index')
-  }
+  	var name = req.session.name
+  	if (name) {
+	    var pIndex = indexOf (name, playerList) 
+	    if (pIndex >= 0) {
+	    	var aIndex = indexOf(name, activeList)
+	    	if (aIndex >= 0){
+	    		res.send('already in')
+	    		console.log(name + ' is already logged in')
+	    	} else {
+		    	activeList.push(playerList[pIndex])
+		      	res.send('good')
+		      	console.log(name + ' logged in')
+		      }
+	    } else {
+	      	res.send('not exist')
+	      	console.log(name + ' does not exist')
+	    }
+  	} else {
+    	res.send('timeout')
+    	console.log('session timeout, redirect to index')
+  	}
 })
+// POST: player logs out
+app.post('/logOut', function (req, res) {
+  	var name = req.session.name
+  	if (name) {
+  		var pIndex = indexOf (name, playerList) 
+		if (pIndex >= 0) {
+		    var aIndex = indexOf (name, activeList) 
+		    if (aIndex >= 0) {
+		      activeList.splice(aIndex, 1)
+		      res.send('good')
+		      console.log(name + ' logged out')
+		    } else {
+		      res.send('already out')
+		      console.log(name + ' is already logged out')
+		    }
+		} else {
+			res.send('not exist')
+		    console.log(name + ' does not exist')
+		}
+  	} else {
+    	res.send('timeout')
+   		console.log('session timeout, redirect to index')
+  	}
+})
+
 
 app.listen(process.env.PORT || port)
 console.log('listening on ' + port)

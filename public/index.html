@@ -31,13 +31,6 @@
   
   <script>
 // HF
-/*
-newXHRRequest('POST', '/initUsername', initUsernameSender, function(req){
-	if (req.responseText === 'on') {
-	   	window.location.href = 'lobby.html'
-	}
-})
-*/
 // definition
 function initUsername () {
 	newXHRRequest('POST', '/initUsername', initUsernameSender, initUsernameHandler)
@@ -54,9 +47,10 @@ function initUsernameSender (req) {
 function initUsernameHandler (req) {
 	//var T = JSON.parse(req.responseText);
 	var rt = req.responseText
+  console.log(rt)
     if (rt === 'good') {
     	window.location.href = 'lobby.html'
-    } else {
+    } else if (rt === 'name used') {
     	// username already used
     	console.log('playername already used')
     }
