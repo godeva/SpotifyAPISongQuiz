@@ -31,13 +31,14 @@
   
   <script>
 // HF
-window.onbeforeload = function(event) {
-  newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-    if (req.responseText === 'good') {
-      window.location.href = 'lobby.html'
-    }
-  })
-  return null
+
+window.onload = function(event) {
+	newXHRRequest('POST', '/initUsername', initUsernameSender, function(req){
+	    if (req.responseText === 'on') {
+	    	window.location.href = 'lobby.html'
+	    }
+	})
+  	return null
 }
 
 // definition

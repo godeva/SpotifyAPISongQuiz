@@ -31,19 +31,27 @@ app.post('/initUsername', function (req, res) {
     }
   })
   req.on('end', function() {
+    // session is still on
+    if (req.session.username) {
+      res.send('on')
+      return
+    }
     username = postdata
     // check if username already exist
+    var exist = false
     playerList.forEach(function(item, index, array) {
       if (item === username) {
-        res.send('bad')
+        res.send('exist')
+        exist = true
         return
       }
     });
-    // if not
-    playerList.push(username)
-    req.session.username = username
-    console.log(username + ' joined the game')
-    res.send('good')
+    // if not exist
+    if (!exist) {
+      req.session.username = username
+      console.log(username + ' joined')
+      res.send('good')
+    }
   })
 })
 // GET: send a JSON of playerList
@@ -96,7 +104,7 @@ app.post('/logIn', function (req, res) {
     }
   } else {
     res.send('timeout')
-    console.log('log in failed: session timeout')
+    console.log('log in failed: no session data')
   }
 })
 

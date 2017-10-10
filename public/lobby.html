@@ -98,7 +98,6 @@
       
   <script>
 countdown( "countdown", 1, 5 );
-getPlayerList(logPlayerList)
 
 // definitions
   function countdown( elementName, minutes, seconds ){
@@ -130,11 +129,12 @@ getPlayerList(logPlayerList)
 
 // HF
 // log out before closing the browser
-/*
-window.onbeforeload = function(event) {
+window.onload = function(event) {
   newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
     if (req.responseText === 'timeout') {
       window.location.href = 'index.html'
+    } else if (req.responseText === 'good'){
+      getPlayerList(logPlayerList)
     }
   })
   return null
@@ -144,7 +144,7 @@ window.onbeforeunload = function(event) {
   newXHRRequest('POST', '/logOut', function(req){req.send('logout')}, function(req){})
   return null;
 };
-*/
+
 // get the list of current players and run callback after get is completed
 function getPlayerList (callback) {
   newXHRRequest('GET', '/playerList', function(req){req.send()}, function(req) {
