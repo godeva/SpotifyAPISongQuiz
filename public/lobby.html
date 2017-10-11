@@ -61,51 +61,42 @@
        
       </tr>
     </thead>
-    <tbody>
-      <tr class ="success">
-        <td>1</td>
-        <td>Cuphead</td>
-      </tr>      
-      <tr class="danger">
-        <td>2</td>
-        <td>Empty</td>
-      </tr>
-      <tr class="danger">
-        <td>3</td>
-        <td>Empty</td>
-      </tr>
-      <tr class="danger">
-        <td>4</td>
-        <td>Emptye</td>
-      </tr>
-      <tr class="danger">
-        <td>5</td>
-        <td>Empty</td>
-      </tr>
+    <tbody id="activeList">
     </tbody>
   </table>
 
-
   <button onclick="getPlayerList(logPlayerList)" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
 
-
  </div>
-
-
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect(location.origin);
-  socket.on('activeList', function (data) {
+
+var socket = io.connect(location.origin);
+var activeList = []
+
+socket.on('activeList', function (data) {
     console.log(data);
+    activeList = data
+    
+    var table = document.getElementById('activeList')
+    var newtable = ''
+    console.log(activeList)
+    activeList.forEach(function(item, index, array) {
+      newtable += '<tr class = "success">'
+      newtable += '<td>'+index+'</td>'
+      newtable += '<td>'+item.name+'</td>'
+      newtable += '</tr>'
+    })
+    table.innerHTML = newtable
     //socket.emit('my other event', { my: 'data' });
-  });
-</script>
-<script>
+});
+
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
     //getPlayerList(logPlayerList)
+    
   }
 })
 
