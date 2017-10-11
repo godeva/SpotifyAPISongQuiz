@@ -79,10 +79,10 @@ var activeList = []
 socket.on('activeList', function (data) {
     console.log(data);
     activeList = data
-    
+
     var table = document.getElementById('activeList')
     var newtable = ''
-    console.log(activeList)
+    //console.log(activeList)
     activeList.forEach(function(item, index, array) {
       newtable += '<tr class = "success">'
       newtable += '<td>'+index+'</td>'

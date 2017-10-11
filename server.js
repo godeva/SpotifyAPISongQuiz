@@ -15,9 +15,8 @@ server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
-
 // requests using the socket
-io.on('connection', function (socket) {
+io.on('connect', function (socket) {
 /*
 socket.on('my other event', function (data) {
   console.log(data);
@@ -56,7 +55,7 @@ app.post('/logOut', function (req, res) {
         var aIndex = indexOf (name, activeList) 
         if (aIndex >= 0) {
             activeList.splice(aIndex, 1)
-            socket.broadcast.emit('activeList', activeList);
+            //socket.broadcast.emit('activeList', activeList);
             res.send('good')
             console.log(name + ' logged out')
         } else {
@@ -73,6 +72,9 @@ app.post('/logOut', function (req, res) {
     }
 })
 
+socket.on('disconnecting', function(reason) {
+  socket.broadcast.emit('activeList', activeList);
+})
 });
 
 // player definition: {name: string, currentScore: int, bestScore: int}
