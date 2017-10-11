@@ -30,7 +30,7 @@ var stateKey = 'spotify_auth_state';
 
 
 // active players
-, http = require('http')
+ http = require('http')
 , PORT = process.env.PORT || 3000
 
 const app = express()
