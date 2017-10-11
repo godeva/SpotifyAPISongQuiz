@@ -18,17 +18,23 @@ app.use(express.static(path.join(__dirname, 'public/static')));
 const wss = new SocketServer({server})
 
 wss.on('connection', (ws) => {
-  	console.log('Client connected');
-  	ws.on('close', () => console.log('Client disconnected'));
-});
+  	console.log('Client connected')
+  	ws.on('close', () => console.log('Client disconnected'))
+})
 
+function sendActiveList() {
+  	wss.clients.forEach((client) => {
+    	client.send(JSON.stringify(activeList))
+  	})
+}
+/*
 setInterval(() => {
   wss.clients.forEach((client) => {
     client.send(new Date().toTimeString());
   });
 }, 1000);
+*/
 
-// active players
 // player definition: {name: string, currentScore: int, bestScore: int}
 
 var playerList = []
@@ -121,6 +127,7 @@ app.post('/logIn', function (req, res) {
 	    		console.log(name + ' is already logged in')
 	    	} else {
 		    	activeList.push(playerList[pIndex])
+		      	sendActiveList()
 		      	res.send('good')
 		      	console.log(name + ' logged in')
 		      	//socket.broadcast.emit('activeList', activeList);
@@ -142,12 +149,13 @@ app.post('/logOut', function (req, res) {
 		if (pIndex >= 0) {
 		    var aIndex = indexOf (name, activeList) 
 		    if (aIndex >= 0) {
-		      activeList.splice(aIndex, 1)
-		      res.send('good')
-		      console.log(name + ' logged out')
+		      	activeList.splice(aIndex, 1)
+		      	sendActiveList()
+		      	res.send('good')
+		      	console.log(name + ' logged out')
 		    } else {
-		      res.send('already out')
-		      console.log(name + ' is already logged out')
+		      	res.send('already out')
+		      	console.log(name + ' is already logged out')
 		    }
 		} else {
 			res.send('not exist')
