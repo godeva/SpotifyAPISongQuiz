@@ -36,8 +36,9 @@ io.on('connection', function (socket) {
 
 })
 
-server.listen(port)
-//app.listen(process.env.PORT || port)
+server.listen(3700)
+app.listen(port)
+
 console.log('listening on ' + port)
 
 app.use(express.static(path.join(__dirname, 'public/static')))
