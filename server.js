@@ -21,7 +21,7 @@ app.use(session({
   	cookie: { maxAge: 60000 * 60 * 24 },
   	rolling: true
 }))
-
+/*
 io.on('connection', function (socket) {
   socket.emit('activeList', activeList);
 	//socket.broadcast.emit('activeList', activeList);
@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
   */
   // POST: player logs in
 
-});
+//});
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
