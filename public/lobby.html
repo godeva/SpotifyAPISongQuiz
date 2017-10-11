@@ -106,8 +106,10 @@ newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
 })
 
 function sentChat() {
-  socket.emit('sendChat', yourname+': '+chatinput.value)
-  chatinput.value = ''
+  if (chatinput.value){
+    socket.emit('sendChat', yourname+': '+chatinput.value)
+    chatinput.value = ''
+  }
 }
 
 function buildTable (list) {
