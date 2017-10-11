@@ -17,9 +17,16 @@ app.use(express.static(path.join(__dirname, 'public/static')))
 
 // requests using the socket
 io.on('connect', function (socket) {
+
+socket.on('login', function (data) {
+  console.log('socket login')
+  socket.broadcast.emit('updateList', activeList);
+  //socket.emit('activeList', activeList);
+});
 /*
-socket.on('my other event', function (data) {
-  console.log(data);
+socket.on('logout', function (data) {
+  console.log('socket logout')
+  socket.emit('updateList', activeList);
 });
 */
 app.post('/logIn', function (req, res) {
@@ -33,7 +40,7 @@ app.post('/logIn', function (req, res) {
           console.log(name + ' is already logged in')
         } else {
           activeList.push(playerList[pIndex])
-          socket.broadcast.emit('activeList', activeList);
+          //socket.emit('updateList', activeList);
           res.send('good')
           console.log(name + ' logged in')
           }
@@ -55,7 +62,7 @@ app.post('/logOut', function (req, res) {
         var aIndex = indexOf (name, activeList) 
         if (aIndex >= 0) {
             activeList.splice(aIndex, 1)
-            //socket.broadcast.emit('activeList', activeList);
+            socket.broadcast.emit('updateList', activeList);
             res.send('good')
             console.log(name + ' logged out')
         } else {
@@ -73,8 +80,9 @@ app.post('/logOut', function (req, res) {
 })
 
 socket.on('disconnecting', function(reason) {
-  socket.broadcast.emit('activeList', activeList);
+  socket.broadcast.emit('updateList', activeList);
 })
+
 });
 
 // player definition: {name: string, currentScore: int, bestScore: int}
