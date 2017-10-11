@@ -61,11 +61,17 @@
 
       </tr>
     </thead>
-    <tbody id="activeList">
+    <tbody id="activelist">
     </tbody>
   </table>
 
-  <button onclick="getPlayerList(logPlayerList)" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
+  <div id="chatroom" style="overflow-y: scroll;float: left;height: 150px;width: 200px;text-align: left;">
+  </div>
+
+  <input id="chatinput"></input>
+  <button onclick="sentChat()">chat</button>
+
+  <button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
 
  </div>
 </div>
@@ -74,29 +80,35 @@
 <script>
 
 var socket = io.connect(location.origin);
-var table = document.getElementById('activeList')
+var table = document.getElementById('activelist')
+var chatroom = document.getElementById('chatroom')
+var chatinput = document.getElementById('chatinput')
+var yourname = ''
 
 socket.on('updateList', function (data) {
   console.log('updatelist')
   buildTable(data)
 })
 
-function indexOf (name, list) {
-  var i = -1
-  list.forEach(function(item, index, array) {
-      if (item.name === name) {
-        i = index
-        return
-      }
-  });
-  return i;
-}
+socket.on('newChat', function (data) {
+  console.log('newChat')
+  var back = chatroom.innerHTML
+  chatroom.innerHTML = '<p>'+data+'</p>'
+  chatroom.innerHTML += back
+})
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-  if (req.responseText === 'good'){
-    //socket.emit('getList', 'get');
+  if (req.responseText !== 'bad'){
+    yourname = req.responseText
+    socket.emit('getList')
+    console.log('your name is: '+yourname)
   }
 })
+
+function sentChat() {
+  socket.emit('sendChat', yourname+': '+chatinput.value)
+  chatinput.value = ''
+}
 
 function buildTable (list) {
     var newtable = ''

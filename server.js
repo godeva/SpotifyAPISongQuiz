@@ -30,7 +30,6 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state';
 
-
 // active players
 
 const app = express()
@@ -55,11 +54,12 @@ app.use(session({
 
 var io = require('socket.io')(server)
 io.on('connect', function (socket) {
-
-socket.on('getList', function(data) {
-  socket.emit('updateList', activeList);
-})
-
+  socket.on('getList', function(data) {
+    socket.emit('updateList', activeList);
+  })
+  socket.on('sendChat', function(data) {
+    io.local.emit('newChat', data)
+  })
 })
 
 app.post('/logIn', function (req, res) {
@@ -69,20 +69,20 @@ app.post('/logIn', function (req, res) {
       if (pIndex >= 0) {
         var aIndex = indexOf(name, activeList)
         if (aIndex >= 0){
-          res.send('already in')
+          res.send(name)
           console.log(name + ' is already logged in')
         } else {
           activeList.push(playerList[pIndex])
-          io.local.emit('updateList', activeList);
-          res.send('good')
+          io.local.emit('updateList', activeList)
+          res.send(name)
           console.log(name + ' logged in')
           }
       } else {
-          res.send('not exist')
+          res.send('bad')
           console.log(name + ' does not exist')
       }
     } else {
-      res.send('timeout')
+      res.send('bad')
       console.log('session timeout, redirect to index')
     }
 })
@@ -95,19 +95,19 @@ app.post('/logOut', function (req, res) {
         var aIndex = indexOf (name, activeList) 
         if (aIndex >= 0) {
             activeList.splice(aIndex, 1)
-            io.local.emit('updateList', activeList);
+            io.local.emit('updateList', activeList)
             res.send('good')
             console.log(name + ' logged out')
         } else {
-            res.send('already out')
+            res.send('bad')
             console.log(name + ' is already logged out')
         }
     } else {
-      res.send('not exist')
+      res.send('bad')
         console.log(name + ' does not exist')
     }
     } else {
-      res.send('timeout')
+      res.send('bad')
       console.log('session timeout, redirect to index')
     }
 })
