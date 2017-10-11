@@ -4,6 +4,7 @@ var express = require('express')
 , session = require('express-session')
 , fs = require('fs')
 , qs = require('querystring')
+, db = require('sqlite3')
 , port = 8080
 
 // active players
