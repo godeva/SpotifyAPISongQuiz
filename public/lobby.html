@@ -97,15 +97,23 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
-var socket = io.connect('http://localhost:8080');
+
+//var socket = io.connect('http://localhost:8080');
+/*
 socket.on('activeList', function (data) {
   console.log(data);
   //socket.emit('my other event', { my: 'data' });
 })
-
+*/
+var socket = io.connect('http://final-hzhang3atwpi.herokuapp.com:8080');
+    socket.on('activeList', function (data) {
+      console.log(data); 
+    })
+    
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
     //getPlayerList(logPlayerList)
+    
   }
 })
 
