@@ -1,6 +1,6 @@
 
 var express = require('express')
-, SocketServer = require('ws').Server
+//, SocketServer = require('ws').Server
 , path = require('path')
 , session = require('express-session')
 , fs = require('fs')
@@ -10,13 +10,20 @@ var express = require('express')
 
 const app = express();
 const server = http.createServer(app);
+var io = require('socket.io')(server);
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
-//app.use((req, res) => res.sendFile(INDEX))
 app.use(express.static(path.join(__dirname, 'public/static')));
 
-const wss = new SocketServer({server})
+io.on('connection', function (socket) {
+  socket.broadcast.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
 
+//const wss = new SocketServer({server})
+/*
 wss.on('connection', (ws) => {
   	console.log('Client connected')
   	ws.on('close', () => console.log('Client disconnected'))
@@ -127,8 +134,6 @@ app.post('/logIn', function (req, res) {
 	    		console.log(name + ' is already logged in')
 	    	} else {
 		    	activeList.push(playerList[pIndex])
-          var content = JSON.stringify(activeList)
-          sendToClients(content)
 		      res.send('good')
 		      console.log(name + ' logged in')
 		      }
@@ -150,8 +155,6 @@ app.post('/logOut', function (req, res) {
 		    var aIndex = indexOf (name, activeList) 
 		    if (aIndex >= 0) {
 		      	activeList.splice(aIndex, 1)
-            var content = JSON.stringify(activeList)
-            sendToClients(content)
 		      	res.send('good')
 		      	console.log(name + ' logged out')
 		    } else {
