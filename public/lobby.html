@@ -97,23 +97,15 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io.connect(location.origin);
-  socket.on('news', function (data) {
+  socket.on('activeList', function (data) {
     console.log(data);
-    socket.emit('my other event', { my: 'data' });
+    //socket.emit('my other event', { my: 'data' });
   });
 </script>
 <script>
-/*
-var HOST = location.origin.replace(/^http/, 'ws')
-var ws = new WebSocket(HOST)
-ws.onmessage = function (event) {
-  console.log(JSON.parse(event.data))
-}
-*/
-
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
-    // getPlayerList(logPlayerList)
+    //getPlayerList(logPlayerList)
   }
 })
 

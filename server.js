@@ -1,6 +1,5 @@
 
 var express = require('express')
-//, SocketServer = require('ws').Server
 , path = require('path')
 , session = require('express-session')
 , fs = require('fs')
@@ -8,39 +7,73 @@ var express = require('express')
 , http = require('http')
 , PORT = process.env.PORT || 3000
 
-const app = express();
-const server = http.createServer(app);
-var io = require('socket.io')(server);
+const app = express()
+const server = http.createServer(app)
+var io = require('socket.io')(server)
+
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
-app.use(express.static(path.join(__dirname, 'public/static')));
+app.use(express.static(path.join(__dirname, 'public/static')))
 
+
+// requests using the socket
 io.on('connection', function (socket) {
-  socket.broadcast.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});
-
-//const wss = new SocketServer({server})
 /*
-wss.on('connection', (ws) => {
-  	console.log('Client connected')
-  	ws.on('close', () => console.log('Client disconnected'))
+socket.on('my other event', function (data) {
+  console.log(data);
+});
+*/
+app.post('/logIn', function (req, res) {
+    var name = req.session.name
+    if (name) {
+      var pIndex = indexOf (name, playerList) 
+      if (pIndex >= 0) {
+        var aIndex = indexOf(name, activeList)
+        if (aIndex >= 0){
+          res.send('already in')
+          console.log(name + ' is already logged in')
+        } else {
+          activeList.push(playerList[pIndex])
+          socket.broadcast.emit('activeList', activeList);
+          res.send('good')
+          console.log(name + ' logged in')
+          }
+      } else {
+          res.send('not exist')
+          console.log(name + ' does not exist')
+      }
+    } else {
+      res.send('timeout')
+      console.log('session timeout, redirect to index')
+    }
+})
+// POST: player logs out
+app.post('/logOut', function (req, res) {
+    var name = req.session.name
+    if (name) {
+      var pIndex = indexOf (name, playerList) 
+    if (pIndex >= 0) {
+        var aIndex = indexOf (name, activeList) 
+        if (aIndex >= 0) {
+            activeList.splice(aIndex, 1)
+            socket.broadcast.emit('activeList', activeList);
+            res.send('good')
+            console.log(name + ' logged out')
+        } else {
+            res.send('already out')
+            console.log(name + ' is already logged out')
+        }
+    } else {
+      res.send('not exist')
+        console.log(name + ' does not exist')
+    }
+    } else {
+      res.send('timeout')
+      console.log('session timeout, redirect to index')
+    }
 })
 
-function sendToClients(content) {
-  	wss.clients.forEach((client) => {
-    	client.send(content)
-  	})
-}
-/*
-setInterval(() => {
-  wss.clients.forEach((client) => {
-    client.send(new Date().toTimeString());
-  });
-}, 1000);
-*/
+});
 
 // player definition: {name: string, currentScore: int, bestScore: int}
 
@@ -123,53 +156,7 @@ app.post('/initUsername', function (req, res) {
 })
 
 
-app.post('/logIn', function (req, res) {
-  	var name = req.session.name
-  	if (name) {
-	    var pIndex = indexOf (name, playerList) 
-	    if (pIndex >= 0) {
-	    	var aIndex = indexOf(name, activeList)
-	    	if (aIndex >= 0){
-	    		res.send('already in')
-	    		console.log(name + ' is already logged in')
-	    	} else {
-		    	activeList.push(playerList[pIndex])
-		      res.send('good')
-		      console.log(name + ' logged in')
-		      }
-	    } else {
-	      	res.send('not exist')
-	      	console.log(name + ' does not exist')
-	    }
-  	} else {
-    	res.send('timeout')
-    	console.log('session timeout, redirect to index')
-  	}
-})
-// POST: player logs out
-app.post('/logOut', function (req, res) {
-  	var name = req.session.name
-  	if (name) {
-  		var pIndex = indexOf (name, playerList) 
-		if (pIndex >= 0) {
-		    var aIndex = indexOf (name, activeList) 
-		    if (aIndex >= 0) {
-		      	activeList.splice(aIndex, 1)
-		      	res.send('good')
-		      	console.log(name + ' logged out')
-		    } else {
-		      	res.send('already out')
-		      	console.log(name + ' is already logged out')
-		    }
-		} else {
-			res.send('not exist')
-		    console.log(name + ' does not exist')
-		}
-  	} else {
-    	res.send('timeout')
-   		console.log('session timeout, redirect to index')
-  	}
-})
+
 
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
