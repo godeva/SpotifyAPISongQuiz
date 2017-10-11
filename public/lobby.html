@@ -61,11 +61,17 @@
 
       </tr>
     </thead>
-    <tbody id="activeList">
+    <tbody id="activelist">
     </tbody>
   </table>
 
-  <button onclick="getPlayerList(logPlayerList)" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
+  <div id="chatroom" style="overflow-y: scroll;float: left;height: 150px;width: 200px;text-align: left;">
+  </div>
+
+  <input id="chatinput"></input>
+  <button onclick="sentChat()">chat</button>
+
+  <button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
 
  </div>
 </div>
@@ -74,22 +80,39 @@
 <script>
 
 var socket = io.connect(location.origin);
-var activeList = []
+var table = document.getElementById('activelist')
+var chatroom = document.getElementById('chatroom')
+var chatinput = document.getElementById('chatinput')
+var yourname = ''
 
 socket.on('updateList', function (data) {
-    console.log(data);
-    buildTable(data)
-    //socket.emit('my other event', { my: 'data' });
-});
+  console.log('updatelist')
+  buildTable(data)
+})
+
+socket.on('newChat', function (data) {
+  console.log('newChat')
+  var back = chatroom.innerHTML
+  chatroom.innerHTML = '<p>'+data+'</p>'
+  chatroom.innerHTML += back
+})
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
-  if (req.responseText === 'good'){
-    getPlayerList(logPlayerList)
+  if (req.responseText !== 'bad'){
+    yourname = req.responseText
+    socket.emit('getList')
+    console.log('your name is: '+yourname)
   }
 })
 
+function sentChat() {
+  if (chatinput.value){
+    socket.emit('sendChat', yourname+': '+chatinput.value)
+    chatinput.value = ''
+  }
+}
+
 function buildTable (list) {
-  var table = document.getElementById('activeList')
     var newtable = ''
     //console.log(activeList)
     list.forEach(function(item, index, array) {
@@ -139,20 +162,6 @@ window.onbeforeunload = function(event) {
   }, function(req){
   })
 };
-
-// get the list of current players and run callback after get is completed
-function getPlayerList (callback) {
-  newXHRRequest('GET', '/playerList', function(req){req.send()}, function(req) {
-    var playerList = JSON.parse(req.responseText)
-    // do what ever with the list
-    callback(playerList)
-  })
-}
-
-function logPlayerList (list) {
-  buildTable(list)
-  socket.emit('login');
-}
 
 </script>
 

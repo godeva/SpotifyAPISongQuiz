@@ -6,6 +6,8 @@ var express = require('express')
 , qs = require('querystring')
 , db = require('sqlite3')
 , port = 8080
+, http = require('http')
+, PORT = process.env.PORT || 3000
 
 var request = require('request');
 var querystring = require('querystring');
@@ -28,33 +30,36 @@ var generateRandomString = function(length) {
 
 var stateKey = 'spotify_auth_state';
 
-
-// active players
- http = require('http')
-, PORT = process.env.PORT || 3000
-
 const app = express()
 const server = http.createServer(app)
-var io = require('socket.io')(server)
-
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
-// requests using the socket
-io.on('connect', function (socket) {
+// player definition: {name: string, currentScore: int, bestScore: int}
 
-socket.on('login', function (data) {
-  console.log('socket login')
-  socket.broadcast.emit('updateList', activeList);
-  //socket.emit('activeList', activeList);
-});
-/*
-socket.on('logout', function (data) {
-  console.log('socket logout')
-  socket.emit('updateList', activeList);
-});
-*/
+var playerList = []
+var activeList = []
+
+app.use(session({
+    secret: 'keyboard meow',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 * 60 * 24 },
+    rolling: true
+}))
+
+
+var io = require('socket.io')(server)
+io.on('connect', function (socket) {
+  socket.on('getList', function(data) {
+    socket.emit('updateList', activeList);
+  })
+  socket.on('sendChat', function(data) {
+    io.local.emit('newChat', data)
+  })
+})
+
 app.post('/logIn', function (req, res) {
     var name = req.session.name
     if (name) {
@@ -62,20 +67,20 @@ app.post('/logIn', function (req, res) {
       if (pIndex >= 0) {
         var aIndex = indexOf(name, activeList)
         if (aIndex >= 0){
-          res.send('already in')
+          res.send(name)
           console.log(name + ' is already logged in')
         } else {
           activeList.push(playerList[pIndex])
-          //socket.emit('updateList', activeList);
-          res.send('good')
+          io.local.emit('updateList', activeList)
+          res.send(name)
           console.log(name + ' logged in')
           }
       } else {
-          res.send('not exist')
+          res.send('bad')
           console.log(name + ' does not exist')
       }
     } else {
-      res.send('timeout')
+      res.send('bad')
       console.log('session timeout, redirect to index')
     }
 })
@@ -88,41 +93,23 @@ app.post('/logOut', function (req, res) {
         var aIndex = indexOf (name, activeList) 
         if (aIndex >= 0) {
             activeList.splice(aIndex, 1)
-            socket.broadcast.emit('updateList', activeList);
+            io.local.emit('updateList', activeList)
             res.send('good')
             console.log(name + ' logged out')
         } else {
-            res.send('already out')
+            res.send('bad')
             console.log(name + ' is already logged out')
         }
     } else {
-      res.send('not exist')
+      res.send('bad')
         console.log(name + ' does not exist')
     }
     } else {
-      res.send('timeout')
+      res.send('bad')
       console.log('session timeout, redirect to index')
     }
 })
 
-socket.on('disconnecting', function(reason) {
-  socket.broadcast.emit('updateList', activeList);
-})
-
-});
-
-// player definition: {name: string, currentScore: int, bestScore: int}
-
-var playerList = []
-var activeList = []
-
-app.use(session({
-  	secret: 'keyboard meow',
-  	resave: false,
-  	saveUninitialized: true,
-  	cookie: { maxAge: 60000 * 60 * 24 },
-  	rolling: true
-}))
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
