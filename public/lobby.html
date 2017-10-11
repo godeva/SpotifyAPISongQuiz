@@ -74,22 +74,31 @@
 <script>
 
 var socket = io.connect(location.origin);
-var activeList = []
+var table = document.getElementById('activeList')
 
 socket.on('updateList', function (data) {
-    console.log(data);
-    buildTable(data)
-    //socket.emit('my other event', { my: 'data' });
-});
+  console.log('updatelist')
+  buildTable(data)
+})
+
+function indexOf (name, list) {
+  var i = -1
+  list.forEach(function(item, index, array) {
+      if (item.name === name) {
+        i = index
+        return
+      }
+  });
+  return i;
+}
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
-    getPlayerList(logPlayerList)
+    //socket.emit('getList', 'get');
   }
 })
 
 function buildTable (list) {
-  var table = document.getElementById('activeList')
     var newtable = ''
     //console.log(activeList)
     list.forEach(function(item, index, array) {
@@ -139,20 +148,6 @@ window.onbeforeunload = function(event) {
   }, function(req){
   })
 };
-
-// get the list of current players and run callback after get is completed
-function getPlayerList (callback) {
-  newXHRRequest('GET', '/playerList', function(req){req.send()}, function(req) {
-    var playerList = JSON.parse(req.responseText)
-    // do what ever with the list
-    callback(playerList)
-  })
-}
-
-function logPlayerList (list) {
-  buildTable(list)
-  socket.emit('login');
-}
 
 </script>
 
