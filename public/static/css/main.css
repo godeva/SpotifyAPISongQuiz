@@ -135,16 +135,15 @@ a:active {
 }
 
 .quiz .question .track {
-    position: absolute;
     top: auto;
     left: 0;
     right: 0;
     font-weight: 900;
-    color: #928263;
+    color: white;
     text-transform: uppercase;
     line-height: 0.9;
     margin: auto;
-    padding: 30px 0 10px 0;
+    padding: 10px 0 10px 0;
 }
 
 .quiz .question .playlist {
@@ -162,7 +161,7 @@ a:active {
 .quiz .answers {
     width: 100%;
     max-width: 800px;
-    margin: 50px auto 0 auto;
+    margin: 20px auto 0 auto;
 }
 
 .quiz .answers .answer {
@@ -175,8 +174,8 @@ a:active {
 
 .quiz .answers .answer:hover {
     color: #fff;
-    border-color: #928263;
-    background-color: #928263;
+    border-color: #aec6cf;
+    background-color: #aec6cf;
     cursor: pointer;
 }
 
@@ -184,8 +183,8 @@ a:active {
 .quiz .answers .correct,
 .quiz .answers .answer.correct:hover,
 .quiz .answers .correct:hover {
-    border-color: #679281;
-    background-color: #679281;
+    border-color: #66cc66;
+    background-color: #66cc66;
 }
 
 .container {
@@ -298,4 +297,12 @@ a:active {
     .quiz .answers .answer {
         font-size: 2em;
     }
+
+}
+
+#gradient{
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
 }
