@@ -4,7 +4,7 @@ var express = require('express')
 , session = require('express-session')
 , fs = require('fs')
 , qs = require('querystring')
-, db = require('sqlite3')
+, sqlite3 = require('sqlite3')
 , port = 8080
 , http = require('http')
 , PORT = process.env.PORT || 3000
@@ -17,6 +17,15 @@ var config = require('./config')[process.env.NODE_ENV || 'development'];
 var client_id = config.client_id;
 var client_secret = config.client_secret;
 var redirect_uri = config.redirect_uri;
+
+//set up database
+var db = new sqlite3.Database('matchdata.sqlite');
+db.serialize(function() {
+  // making the table
+  db.run("DROP TABLE IF EXISTS leaderboard;")
+  db.run("CREATE TABLE leaderboard (player varchar(100), score integer, playlist integer);");
+
+});
 
 var generateRandomString = function(length) {
     var text = '';
