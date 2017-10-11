@@ -5,9 +5,8 @@ var express = require('express')
 , fs = require('fs')
 , qs = require('querystring')
 , db = require('sqlite3')
-, port = 8080
 , http = require('http')
-, PORT = process.env.PORT || 3000
+, PORT = process.env.PORT || 5000
 
 var request = require('request');
 var querystring = require('querystring');
@@ -63,7 +62,7 @@ io.on('connect', function (socket) {
 app.post('/logIn', function (req, res) {
     var name = req.session.name
     if (name) {
-      var pIndex = indexOf (name, playerList) 
+      var pIndex = indexOf (name, playerList)
       if (pIndex >= 0) {
         var aIndex = indexOf(name, activeList)
         if (aIndex >= 0){
@@ -88,9 +87,9 @@ app.post('/logIn', function (req, res) {
 app.post('/logOut', function (req, res) {
     var name = req.session.name
     if (name) {
-      var pIndex = indexOf (name, playerList) 
+      var pIndex = indexOf (name, playerList)
     if (pIndex >= 0) {
-        var aIndex = indexOf (name, activeList) 
+        var aIndex = indexOf (name, activeList)
         if (aIndex >= 0) {
             activeList.splice(aIndex, 1)
             io.local.emit('updateList', activeList)
@@ -143,6 +142,57 @@ app.get('/login', function(req, res) {
             redirect_uri: redirect_uri,
             state: state
         }));
+});
+
+app.get('/callback', function(req, res) {
+
+    var code = req.query.code || null;
+    var state = req.query.state || null;
+    var storedState = req.cookies ? req.cookies[stateKey] : null;
+
+    if (state === null || state !== storedState) {
+        res.redirect('/#' +
+            querystring.stringify({
+                error: 'state_mismatch'
+            }));
+    } else {
+        res.clearCookie(stateKey);
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+                code: code,
+                redirect_uri: redirect_uri,
+                grant_type: 'authorization_code'
+            },
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+            },
+            json: true
+        };
+
+        request.post(authOptions, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+
+                var access_token = body.access_token;
+
+                var options = {
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: { 'Authorization': 'Bearer ' + access_token },
+                    json: true
+                };
+
+                res.redirect('quiz/#' +
+                    querystring.stringify({
+                        access_token: access_token
+                    }));
+            } else {
+                res.redirect('/#' +
+                    querystring.stringify({
+                        error: 'invalid_token'
+                    }));
+            }
+        });
+    }
 });
 
 function indexHandler (req, res) {
