@@ -4,6 +4,32 @@ var express = require('express')
 , session = require('express-session')
 , fs = require('fs')
 , qs = require('querystring')
+, db = require('sqlite3')
+, port = 8080
+
+var request = require('request');
+var querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+var config = require('./config')[process.env.NODE_ENV || 'development'];
+
+var client_id = config.client_id;
+var client_secret = config.client_secret;
+var redirect_uri = config.redirect_uri;
+
+var generateRandomString = function(length) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+};
+
+var stateKey = 'spotify_auth_state';
+
+
+// active players
 , http = require('http')
 , PORT = process.env.PORT || 3000
 
@@ -100,6 +126,8 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
+app.use(cookieParser());
+
 app.get('/index.html', indexHandler)
 
 app.get('/', indexHandler)
@@ -107,6 +135,28 @@ app.get('/', indexHandler)
 app.get('/lobby.html', lobbyHandler)
 
 app.get('/lobby', lobbyHandler)
+
+app.get('/quiz.html', quizHandler)
+
+app.get('/quiz', function(req, res) {
+    res.sendfile(__dirname + '/public/quiz.html');
+});
+
+app.get('/login', function(req, res) {
+
+    var state = generateRandomString(16);
+    res.cookie(stateKey, state);
+
+    var scope = 'user-read-private user-read-email';
+    res.redirect('https://accounts.spotify.com/authorize?' +
+        querystring.stringify({
+            response_type: 'code',
+            client_id: client_id,
+            scope: scope,
+            redirect_uri: redirect_uri,
+            state: state
+        }));
+});
 
 function indexHandler (req, res) {
 	if (req.session.name) {
@@ -124,12 +174,21 @@ function lobbyHandler (req, res) {
 	}
 }
 
+function quizHandler (req, res) {
+	if (!req.session.name) {
+		res.redirect('/')
+	} else {
+		res.sendFile(path.join(__dirname, 'public/quiz.html'))
+	}
+}
+
+
 // POST: store new player into playerList and store name in session
 app.post('/initUsername', function (req, res) {
   var postdata = ''
   req.on('data', function(d) {
     postdata += d
-    if (postdata.length > 1e6) { 
+    if (postdata.length > 1e6) {
       // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
       request.connection.destroy();
     }
@@ -178,7 +237,6 @@ app.get('/activeList', function (req, res) {
   	res.send(content)
 })
 
-
 function indexOf (name, list) {
   var i = -1
   list.forEach(function(item, index, array) {
@@ -189,70 +247,3 @@ function indexOf (name, list) {
   });
   return i;
 }
-// Jackson's server
-/*var http = require('http')
-  , fs   = require('fs')
-  , url  = require('url')
-  , port = 8080;
-
-var app = http.createServer (function (req, res) {
-  var uri = url.parse(req.url)
-
-  switch( uri.pathname ) {
-    case '/':
-      sendFile(res, 'public/index.html')
-      break
-    case '/index.html':
-      sendFile(res, 'public/index.html')
-      break
-    case '/lobby.html':
-      sendFile(res, 'public/lobby.html')
-      break
-    case '/css/style.css':
-      sendFile(res, 'public/css/style.css', 'text/css')
-      break
-    case '/js/scripts.js':
-      sendFile(res, 'public/js/scripts.js', 'text/javascript')
-      break
-    case '/images/bg.jpg':
-      sendFile(res, 'public/images/bg.jpg', 'image/jpg')
-      break
-    case '/images/spot.png':
-      sendFile(res, 'public/images/spot.png', 'image/png')
-      break
-    case '/images/turnt.jpg':
-      sendFile(res, 'public/images/turnt.jpg', 'image/jpg')
-      break
-    case '/images/hot.jpg':
-      sendFile(res, 'public/images/hot.jpg', 'image/jpg')
-      break
-    case '/images/fresh.jpg':
-      sendFile(res, 'public/images/fresh.jpg', 'image/jpg')
-      break
-    case '/images/solid.jpg':
-      sendFile(res, 'public/images/solid.jpg', 'image/jpg')
-      break
-    case '/images/top.jpg':
-      sendFile(res, 'public/images/top.jpg', 'image/jpg')
-      break
-  
-      
-    default:
-      res.end('404 not found')
-  }
-})
-
-app.listen(process.env.PORT || port);
-console.log('listening on 8080')
-
-
-function sendFile(res, filename, contentType) {
-  contentType = contentType || 'text/html';
-
-  fs.readFile(filename, function(error, content) {
-    res.writeHead(200, {'Content-type': contentType})
-    res.end(content, 'utf-8')
-  })
-
-}
-*/
