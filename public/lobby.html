@@ -61,50 +61,45 @@
 
       </tr>
     </thead>
-    <tbody>
-      <tr class ="success">
-        <td>1</td>
-        <td>Cuphead</td>
-      </tr>
-      <tr class="danger">
-        <td>2</td>
-        <td>Empty</td>
-      </tr>
-      <tr class="danger">
-        <td>3</td>
-        <td>Empty</td>
-      </tr>
-      <tr class="danger">
-        <td>4</td>
-        <td>Emptye</td>
-      </tr>
-      <tr class="danger">
-        <td>5</td>
-        <td>Empty</td>
-      </tr>
+    <tbody id="activeList">
     </tbody>
   </table>
 
-
-  <button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
-  <div class="login">
-      <a href="/login">Sign Into Spotify</a>
-  </div>
+  <button onclick="getPlayerList(logPlayerList)" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
 
  </div>
-
-
 </div>
 
+<script src="/socket.io/socket.io.js"></script>
+<script>
 
+var socket = io.connect(location.origin);
+var activeList = []
 
-  <script>
+socket.on('updateList', function (data) {
+    console.log(data);
+    buildTable(data)
+    //socket.emit('my other event', { my: 'data' });
+});
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
     getPlayerList(logPlayerList)
   }
 })
+
+function buildTable (list) {
+  var table = document.getElementById('activeList')
+    var newtable = ''
+    //console.log(activeList)
+    list.forEach(function(item, index, array) {
+      newtable += '<tr class = "success">'
+      newtable += '<td>'+index+'</td>'
+      newtable += '<td>'+item.name+'</td>'
+      newtable += '</tr>'
+    })
+    table.innerHTML = newtable
+}
 
 countdown( "countdown", 1, 5 );
 
@@ -139,8 +134,10 @@ countdown( "countdown", 1, 5 );
 // HF
 // log out before closing the browser
 window.onbeforeunload = function(event) {
-  newXHRRequest('POST', '/logOut', function(req){req.send('logout')}, function(req){})
-  return null;
+  newXHRRequest('POST', '/logOut', function(req){
+    req.send('logout')
+  }, function(req){
+  })
 };
 
 // get the list of current players and run callback after get is completed
@@ -153,9 +150,11 @@ function getPlayerList (callback) {
 }
 
 function logPlayerList (list) {
-  console.log(list)
+  buildTable(list)
+  socket.emit('login');
 }
-  </script>
+
+</script>
 
   </body>
 </html>

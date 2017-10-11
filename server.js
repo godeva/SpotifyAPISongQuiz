@@ -1,4 +1,4 @@
-// my server
+
 var express = require('express')
 , path = require('path')
 , session = require('express-session')
@@ -30,24 +30,103 @@ var stateKey = 'spotify_auth_state';
 
 
 // active players
+, http = require('http')
+, PORT = process.env.PORT || 3000
+
+const app = express()
+const server = http.createServer(app)
+var io = require('socket.io')(server)
+
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+app.use(express.static(path.join(__dirname, 'public/static')))
+
+// requests using the socket
+io.on('connect', function (socket) {
+
+socket.on('login', function (data) {
+  console.log('socket login')
+  socket.broadcast.emit('updateList', activeList);
+  //socket.emit('activeList', activeList);
+});
+/*
+socket.on('logout', function (data) {
+  console.log('socket logout')
+  socket.emit('updateList', activeList);
+});
+*/
+app.post('/logIn', function (req, res) {
+    var name = req.session.name
+    if (name) {
+      var pIndex = indexOf (name, playerList) 
+      if (pIndex >= 0) {
+        var aIndex = indexOf(name, activeList)
+        if (aIndex >= 0){
+          res.send('already in')
+          console.log(name + ' is already logged in')
+        } else {
+          activeList.push(playerList[pIndex])
+          //socket.emit('updateList', activeList);
+          res.send('good')
+          console.log(name + ' logged in')
+          }
+      } else {
+          res.send('not exist')
+          console.log(name + ' does not exist')
+      }
+    } else {
+      res.send('timeout')
+      console.log('session timeout, redirect to index')
+    }
+})
+// POST: player logs out
+app.post('/logOut', function (req, res) {
+    var name = req.session.name
+    if (name) {
+      var pIndex = indexOf (name, playerList) 
+    if (pIndex >= 0) {
+        var aIndex = indexOf (name, activeList) 
+        if (aIndex >= 0) {
+            activeList.splice(aIndex, 1)
+            socket.broadcast.emit('updateList', activeList);
+            res.send('good')
+            console.log(name + ' logged out')
+        } else {
+            res.send('already out')
+            console.log(name + ' is already logged out')
+        }
+    } else {
+      res.send('not exist')
+        console.log(name + ' does not exist')
+    }
+    } else {
+      res.send('timeout')
+      console.log('session timeout, redirect to index')
+    }
+})
+
+socket.on('disconnecting', function(reason) {
+  socket.broadcast.emit('updateList', activeList);
+})
+
+});
+
 // player definition: {name: string, currentScore: int, bestScore: int}
+
 var playerList = []
 var activeList = []
-const app = express()
-
 
 app.use(session({
-  secret: 'keyboard meow',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { maxAge: 60000 * 60 * 24 },
-  rolling: true
+  	secret: 'keyboard meow',
+  	resave: false,
+  	saveUninitialized: true,
+  	cookie: { maxAge: 60000 * 60 * 24 },
+  	rolling: true
 }))
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
 app.use(cookieParser());
-
 
 app.get('/index.html', indexHandler)
 
@@ -130,7 +209,6 @@ app.post('/initUsername', function (req, res) {
       });
       // if not exist
       if (!exist) {
-
         req.session.name = name
       	playerList.push({name: req.session.name, currentScore: 0, bestScore: 0})
         console.log(name + ' joined')
@@ -146,6 +224,9 @@ app.post('/initUsername', function (req, res) {
   })
 })
 
+
+
+
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
   	var content = JSON.stringify(playerList)
@@ -155,109 +236,6 @@ app.get('/activeList', function (req, res) {
 	var content = JSON.stringify(activeList)
   	res.send(content)
 })
-// POST: player logs in
-app.post('/logIn', function (req, res) {
-  	var name = req.session.name
-  	if (name) {
-	    var pIndex = indexOf (name, playerList)
-	    if (pIndex >= 0) {
-	    	var aIndex = indexOf(name, activeList)
-	    	if (aIndex >= 0){
-	    		res.send('already in')
-	    		console.log(name + ' is already logged in')
-	    	} else {
-		    	activeList.push(playerList[pIndex])
-		      	res.send('good')
-		      	console.log(name + ' logged in')
-		      }
-	    } else {
-	      	res.send('not exist')
-	      	console.log(name + ' does not exist')
-	    }
-  	} else {
-    	res.send('timeout')
-    	console.log('session timeout, redirect to index')
-  	}
-})
-// POST: player logs out
-app.post('/logOut', function (req, res) {
-  	var name = req.session.name
-  	if (name) {
-  		var pIndex = indexOf (name, playerList)
-		if (pIndex >= 0) {
-		    var aIndex = indexOf (name, activeList)
-		    if (aIndex >= 0) {
-		      activeList.splice(aIndex, 1)
-		      res.send('good')
-		      console.log(name + ' logged out')
-		    } else {
-		      res.send('already out')
-		      console.log(name + ' is already logged out')
-		    }
-		} else {
-			res.send('not exist')
-		    console.log(name + ' does not exist')
-		}
-  	} else {
-    	res.send('timeout')
-   		console.log('session timeout, redirect to index')
-  	}
-})
-
-app.get('/callback', function(req, res) {
-
-    var code = req.query.code || null;
-    var state = req.query.state || null;
-    var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-    if (state === null || state !== storedState) {
-        res.redirect('/#' +
-            querystring.stringify({
-                error: 'state_mismatch'
-            }));
-    } else {
-        res.clearCookie(stateKey);
-        var authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
-            form: {
-                code: code,
-                redirect_uri: redirect_uri,
-                grant_type: 'authorization_code'
-            },
-            headers: {
-                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-            },
-            json: true
-        };
-
-        request.post(authOptions, function(error, response, body) {
-            if (!error && response.statusCode === 200) {
-
-                var access_token = body.access_token;
-
-                var options = {
-                    url: 'https://api.spotify.com/v1/me',
-                    headers: { 'Authorization': 'Bearer ' + access_token },
-                    json: true
-                };
-
-                res.redirect('quiz/#' +
-                    querystring.stringify({
-                        access_token: access_token
-                    }));
-            } else {
-                res.redirect('/#' +
-                    querystring.stringify({
-                        error: 'invalid_token'
-                    }));
-            }
-        });
-    }
-});
-
-
-app.listen(process.env.PORT || port)
-console.log('listening on ' + port)
 
 function indexOf (name, list) {
   var i = -1
