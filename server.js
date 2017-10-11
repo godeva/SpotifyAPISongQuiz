@@ -22,9 +22,9 @@ wss.on('connection', (ws) => {
   	ws.on('close', () => console.log('Client disconnected'))
 })
 
-function sendActiveList() {
+function sendToClients(content) {
   	wss.clients.forEach((client) => {
-    	client.send(JSON.stringify(activeList))
+    	client.send(content)
   	})
 }
 /*
@@ -127,10 +127,10 @@ app.post('/logIn', function (req, res) {
 	    		console.log(name + ' is already logged in')
 	    	} else {
 		    	activeList.push(playerList[pIndex])
-		      	sendActiveList()
-		      	res.send('good')
-		      	console.log(name + ' logged in')
-		      	//socket.broadcast.emit('activeList', activeList);
+          var content = JSON.stringify(activeList)
+          sendToClients(content)
+		      res.send('good')
+		      console.log(name + ' logged in')
 		      }
 	    } else {
 	      	res.send('not exist')
@@ -150,7 +150,8 @@ app.post('/logOut', function (req, res) {
 		    var aIndex = indexOf (name, activeList) 
 		    if (aIndex >= 0) {
 		      	activeList.splice(aIndex, 1)
-		      	sendActiveList()
+            var content = JSON.stringify(activeList)
+            sendToClients(content)
 		      	res.send('good')
 		      	console.log(name + ' logged out')
 		    } else {

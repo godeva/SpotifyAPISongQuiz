@@ -30,12 +30,6 @@
     </div>
   <script>
 // HF
-var HOST = location.origin.replace(/^http/, 'ws')
-var ws = new WebSocket(HOST);
-ws.onmessage = function (event) {
-  console.log(JSON.parse(event.data))
-};
-
 // definition
 function initUsername () {
 	newXHRRequest('POST', '/initUsername', initUsernameSender, initUsernameHandler)

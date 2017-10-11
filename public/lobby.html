@@ -104,9 +104,11 @@ ws.onmessage = function (event) {
 
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
-    //getPlayerList(logPlayerList)
+    // getPlayerList(logPlayerList)
   }
 })
+
+
 
 countdown( "countdown", 1, 5 );
 
