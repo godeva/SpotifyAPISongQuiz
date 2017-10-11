@@ -1,19 +1,38 @@
-// my server
+
 var express = require('express')
+, SocketServer = require('ws').Server
 , path = require('path')
 , session = require('express-session')
 , fs = require('fs')
 , qs = require('querystring')
-, port = 8080
-, app = express()
-, server = require('http').createServer(app)
-, io = require('socket.io')(server)
+, http = require('http')
+, PORT = process.env.PORT || 3000
+
+const app = express();
+const server = http.createServer(app);
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+//app.use((req, res) => res.sendFile(INDEX))
+app.use(express.static(path.join(__dirname, 'public/static')));
+
+const wss = new SocketServer({server})
+
+wss.on('connection', (ws) => {
+  	console.log('Client connected');
+  	ws.on('close', () => console.log('Client disconnected'));
+});
+
+setInterval(() => {
+  wss.clients.forEach((client) => {
+    client.send(new Date().toTimeString());
+  });
+}, 1000);
 
 // active players
 // player definition: {name: string, currentScore: int, bestScore: int}
+
 var playerList = []
 var activeList = []
-
 
 app.use(session({
   	secret: 'keyboard meow',
@@ -22,24 +41,6 @@ app.use(session({
   	cookie: { maxAge: 60000 * 60 * 24 },
   	rolling: true
 }))
-
-io.on('connection', function (socket) {
-  socket.emit('activeList', activeList);
-	//socket.broadcast.emit('activeList', activeList);
-  /*
-  socket.on('refreshList', function (data) {
-    console.log(data);
-    socket.emit('activeList', activeList);
-  });
-  */
-  // POST: player logs in
-
-})
-
-server.listen(3700)
-app.listen(port)
-
-console.log('listening on ' + port)
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
@@ -93,7 +94,6 @@ app.post('/initUsername', function (req, res) {
       });
       // if not exist
       if (!exist) {
-
         req.session.name = name
       	playerList.push({name: req.session.name, currentScore: 0, bestScore: 0})
         console.log(name + ' joined')
@@ -186,7 +186,7 @@ function indexOf (name, list) {
   , url  = require('url')
   , port = 8080;
 
-var server = http.createServer (function (req, res) {
+var app = http.createServer (function (req, res) {
   var uri = url.parse(req.url)
 
   switch( uri.pathname ) {
@@ -233,7 +233,7 @@ var server = http.createServer (function (req, res) {
   }
 })
 
-server.listen(process.env.PORT || port);
+app.listen(process.env.PORT || port);
 console.log('listening on 8080')
 
 
