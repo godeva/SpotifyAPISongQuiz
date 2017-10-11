@@ -7,7 +7,7 @@ var express = require('express')
 , port = 8080
 , app = express()
 , server = require('http').createServer(app)
-, io = require('socket.io').listen(server)
+, io = require('socket.io')(server)
 
 // active players
 // player definition: {name: string, currentScore: int, bestScore: int}
@@ -35,6 +35,10 @@ io.on('connection', function (socket) {
   // POST: player logs in
 
 })
+
+server.listen(port)
+//app.listen(process.env.PORT || port)
+console.log('listening on ' + port)
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 
@@ -164,10 +168,6 @@ app.get('/activeList', function (req, res) {
   	res.send(content)
 })
 
-
-server.listen(port)
-//app.listen(process.env.PORT || port)
-console.log('listening on ' + port)
 
 function indexOf (name, list) {
   var i = -1
