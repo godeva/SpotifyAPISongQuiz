@@ -43,7 +43,6 @@ $(document).ready(function() {
         $('#message').html('You have no playlists...');
         $('#countdown').hide();
         setTimeout(function() {
-            window.location.href = 'https://muse.conorhughes.me'
         }, 3000);
     }
 

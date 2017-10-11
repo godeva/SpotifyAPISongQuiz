@@ -50,8 +50,11 @@ $(document).ready(function() {
                         initialiseTracker();
                         $('#quiz').fadeIn();
                         var trackHeight = parseInt($("#track").css("font-size"));
+                        // var playlistHeight = parseInt($("#playlist").css("font-size"));
+                        // var quizHeight = trackHeight + playlistHeight;
                         var quizHeight = trackHeight;
                         $('#track').css('bottom', trackHeight + 'px');
+                        // $('#track').css('bottom', playlistHeight + 'px');
                         $('#question').height(quizHeight * questionHeight);
                     });
                 } else {
