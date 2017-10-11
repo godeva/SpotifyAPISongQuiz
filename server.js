@@ -5,14 +5,15 @@ var express = require('express')
 , fs = require('fs')
 , qs = require('querystring')
 , port = 8080
+, app = express()
+, server = require('http').createServer(app)
+, io = require('socket.io').listen(server)
 
 // active players
 // player definition: {name: string, currentScore: int, bestScore: int}
 var playerList = []
 var activeList = []
-const app = express()
-var server = require('http').Server(app)
-var io = require('socket.io')(server)
+
 
 app.use(session({
   	secret: 'keyboard meow',
@@ -21,7 +22,7 @@ app.use(session({
   	cookie: { maxAge: 60000 * 60 * 24 },
   	rolling: true
 }))
-/*
+
 io.on('connection', function (socket) {
   socket.emit('activeList', activeList);
 	//socket.broadcast.emit('activeList', activeList);
@@ -33,7 +34,7 @@ io.on('connection', function (socket) {
   */
   // POST: player logs in
 
-//});
+})
 
 app.use(express.static(path.join(__dirname, 'public/static')))
 

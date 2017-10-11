@@ -105,15 +105,15 @@ socket.on('activeList', function (data) {
   //socket.emit('my other event', { my: 'data' });
 })
 */
-var socket = io.connect('http://final-hzhang3atwpi.herokuapp.com:8080');
-    socket.on('activeList', function (data) {
-      console.log(data); 
-    })
-    
+
+
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText === 'good'){
     //getPlayerList(logPlayerList)
-    
+    var socket = io()
+socket.on('activeList', function (data) {
+  console.log(data)
+})
   }
 })
 
