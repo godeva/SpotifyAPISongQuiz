@@ -90,6 +90,11 @@ img.spot {
 #top { top: 0; }
 #bottom { bottom: 0; }
 
+#lobby {
+    font-size: 4.0em;
+
+}
+
 h1.header { 
     color: grey; 
     font-family: 'Raleway', sans-serif;
