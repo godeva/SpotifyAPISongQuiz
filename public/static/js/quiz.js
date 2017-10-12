@@ -7,14 +7,14 @@ $(document).ready(function() {
     var answers = ['a', 'b', 'c', 'd'];
     var score = 0;
     var count = 0;
-    var user = {};
+    var user = 'bob';
     var playlists = [];
     var tracks = [];
 
-    var params = getHashParams();
+    //var params = getHashParams();
 
-    var access_token = params.access_token,
-        error = params.error;
+    //var access_token = params.access_token,
+    //    error = params.error;
 
     function shuffleArray(array) {
         var currentIndex = array.length,
@@ -88,6 +88,7 @@ $(document).ready(function() {
         $('#counter').html('Question: ' + 1);
     }
 
+/*
     function getUser() {
         return $.ajax({
             url: 'https://api.spotify.com/v1/me',
@@ -99,7 +100,8 @@ $(document).ready(function() {
             }
         });
     }
-
+*/
+/*
     function getPlaylists() {
         return $.ajax({
             url: 'https://api.spotify.com/v1/me/playlists',
@@ -111,7 +113,8 @@ $(document).ready(function() {
             }
         });
     }
-
+*/
+/*
     function getTracks() {
         var promise = Promise.resolve(null);
 
@@ -125,7 +128,8 @@ $(document).ready(function() {
             return true;
         });
     }
-
+*/
+/*
     function getTrack(playlist, url) {
         return $.ajax({
             url: url,
@@ -140,7 +144,8 @@ $(document).ready(function() {
             }
         });
     }
-
+*/
+/*
     function setTracks(playlist, list) {
         var promise = Promise.resolve(null);
 
@@ -162,7 +167,8 @@ $(document).ready(function() {
             return true;
         });
     }
-
+*/
+/*
     function getRelatedArtists(id) {
         return $.ajax({
             url: 'https://api.spotify.com/v1/artists/' + id + '/related-artists',
@@ -171,7 +177,7 @@ $(document).ready(function() {
             }
         });
     }
-
+*/
     $('.answer').click(function(event) {
         event.preventDefault();
         if (!clicked) {
@@ -218,20 +224,29 @@ $(document).ready(function() {
                 }, 5000);
             });
         } else {
-            getRelatedArtists(tracks[count].artist_id).then(function(response) {
-                count++;
+            //getRelatedArtists(tracks[count].artist_id).then(function(response) {
+                var response = {
+                    artists:[
+                    {name: 'justin bieber'},
+                    {name: 'taylor swift'},
+                    {name: 'justin swift'},
+                    {name: 'taylor bieber'}]
+                }
                 shuffleArray(response.artists);
+                console.log(count)
+                console.log(tracks[count])
                 $('#track').html(tracks[count].name);
-                $('#playlist').html(tracks[count].playlist);
+                //$('#playlist').html(tracks[count].playlist);
                 $('#a').html(response.artists[0].name);
                 $('#b').html(response.artists[1].name);
                 $('#c').html(response.artists[2].name);
                 $('#d').html(response.artists[3].name);
                 setAnswer();
-            });
+                count++;
+            //});
         }
     }
-
+/*
     if (error) {
         alert('There was an error during the authentication');
     } else {
@@ -239,7 +254,14 @@ $(document).ready(function() {
             getUser().then(function() {
                 getPlaylists().then(function() {
                     if (playlists.length == 0) {
-                        noPlaylists();
+                        //noPlaylists();
+                        displayWelcome();
+                        tracks = [
+                        {name: 'dwa', artist: 'justin bieber', artist_id: 'ggawdaiubwda'},
+                        {name: 'dws', artist: 'taylor swift', artist_id: 'ggawdaiubwda'}
+                        ]
+                        shuffleArray(tracks);
+                        createQuestion();
                     } else {
                         displayWelcome();
                         getTracks().then(function() {
@@ -251,4 +273,12 @@ $(document).ready(function() {
             });
         }
     }
+    */
+    displayWelcome();
+    tracks = [
+        {name: 'dwa', artist: 'justin bieber', artist_id: 'ggawdaiubwda'},
+        {name: 'dws', artist: 'taylor swift', artist_id: 'ggawdaiubwda'}
+    ]
+    shuffleArray(tracks);
+    createQuestion();
 });
