@@ -43,6 +43,7 @@ $(document).ready(function() {
     }
 
     function countdown() {
+        console.log ("countdown")
         var counter = setInterval(function() {
                 seconds--;
                 if (seconds < 1) {
@@ -259,19 +260,46 @@ $(document).ready(function() {
         }
     }
 
+    function sendScoreToDB() {
+        var xhr = new XMLHttpRequest();
+
+        if (!xhr) {
+            alert('giving up :( cannot create');
+            return false;
+        }
+
+        var message = user + ":" + score;
+        console.log(message)
+        xhr.onreadystatechange = handleDBUpdate;
+        xhr.open('POST', '/leaders');
+        xhr.send('score=' + message);
+    }
+
+    function handleDBUpdate(req) {
+      var req_targ = req.target; //whyyyy
+      if (req_targ.readyState !== XMLHttpRequest.DONE) {
+        return;
+      }
+
+      if (req_targ.status === 200) {
+        console.log("success");
+        }
+    }
+
     function createQuestion() {
         if (count == tracks.length) {
+            sendScoreToDB();
             $('#quiz').fadeOut(function() {
                 $('#welcome').fadeIn();
                 $('#user').html('Wow ' + user + '!');
-                $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!');
+                $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!<br><br> <u><a id ="lobby" href="lobby.html">Return to the Lobby</a></u>');
                 $('#countdown').html('');
                 setTimeout(function() {
                 }, 5000);
             });
         } else {
             //getRelatedArtists(tracks[count].artist_id).then(function(response) {
-                var response = {
+                 var response = {
                     artists:[
                     {name: 'Charlie Puth'},
                     {name: 'Khalid'},
@@ -282,7 +310,16 @@ $(document).ready(function() {
                     {name: 'SZA'},
                     {name: 'Niall Horan'},
                     {name: 'Demi Lovato'},
-                    {name: 'Lane Harrison'}]
+                    {name: 'Lane Harrison'},
+                    {name: '21 Savage'},
+                    {name: 'Diplo'},
+                    {name: 'La Roux'},
+                    {name: 'Blake Shelton'},
+                    {name: 'Kendrick Lamar'},
+                    {name: 'Eminem'},
+                    {name: 'Alessia Cara'},
+                    {name: 'Logic'},
+                    {name: 'Sam Smith'}]
                 }
                 shuffleArray(response.artists);
                 $('#track').html(tracks[count].name);
@@ -332,10 +369,10 @@ $(document).ready(function() {
                 tracks = tracks2
                 break
             case 'top':
-                tracks = tracks3
+                tracks = tracks1
                 break
             case 'hot':
-                tracks = tracks1
+                tracks = tracks3
                 break
             case 'solid':
                 tracks = tracks4
