@@ -181,7 +181,7 @@ function leaderboardHandler (req, res) {
 function leadersGet(req, res) {
   console.log("leaders get");
   var output_players = []
-  db.each("SELECT player, score FROM leaderboard ORDER BY score", function(err, row) {
+  db.each("SELECT player, score FROM leaderboard ORDER BY score DESC", function(err, row) {
           //console.log("selecting: " + row.title + " : " + row.rating)
           output = row.player + "::" + row.score; // + ": " + row.rating;
           output_players.push(output)
@@ -283,7 +283,7 @@ app.post('/leaders', function(req, res) {
          return
        }
 
-       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + " ORDER BY score;", function(err, row) {
+       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + " ORDER BY score DESC;", function(err, row) {
            output = row.player + "::" + row.score;
            output_players.push(output)
          }, function() {
