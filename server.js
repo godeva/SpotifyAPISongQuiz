@@ -181,9 +181,9 @@ function leaderboardHandler (req, res) {
 function leadersGet(req, res) {
   console.log("leaders get");
   var output_players = []
-  db.each("SELECT player, score FROM leaderboard", function(err, row) {
+  db.each("SELECT player, score FROM leaderboard ORDER BY score DESC", function(err, row) {
           //console.log("selecting: " + row.title + " : " + row.rating)
-          output = row.player; // + ": " + row.rating;
+          output = row.player + "::" + row.score; // + ": " + row.rating;
           output_players.push(output)
       }, function() {
         console.log(output_players)
@@ -195,8 +195,6 @@ function leadersGet(req, res) {
 function callbackSend(res, output_players) {
   res.writeHead(200, {'Content-type': 'application/json'})
   var output = JSON.stringify(output_players)
-  console.log("ouput created")
-  console.log(output)
   res.write(output);
   res.end();
 }
@@ -285,8 +283,8 @@ app.post('/leaders', function(req, res) {
          return
        }
 
-       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + ";", function(err, row) {
-           output = row.player;
+       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + " ORDER BY score DESC;", function(err, row) {
+           output = row.player + "::" + row.score;
            output_players.push(output)
          }, function() {
            console.log("yas fam :)")
@@ -313,6 +311,7 @@ app.post('/leaders', function(req, res) {
       db.run("INSERT INTO leaderboard VALUES ('" + name + "', " + score + ", 0)");
 
       console.log("db updated");
+      callbackSend(res, "OK")
      }
  
      });  
