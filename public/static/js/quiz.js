@@ -42,6 +42,7 @@ $(document).ready(function() {
     }
 
     function countdown() {
+        console.log ("countdown")
         var counter = setInterval(function() {
                 seconds--;
                 if (seconds < 1) {
@@ -281,6 +282,7 @@ $(document).ready(function() {
 
       if (req_targ.status === 200) {
         console.log("success");
+        }
     }
 
     function createQuestion() {
