@@ -258,6 +258,8 @@ $(document).ready(function() {
         }
     }
 
+    
+
     function createQuestion() {
         if (count == tracks.length) {
             $('#quiz').fadeOut(function() {

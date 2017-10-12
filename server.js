@@ -294,6 +294,25 @@ app.post('/leaders', function(req, res) {
            console.log(output_players)
            callbackSend(res, output_players);
          });
+     } else if (postdata.substring(0, 6) === "score=") {
+      input = postdata.substring(6);
+
+      var breakIndex = input.indexOf(':');
+      if (breakIndex === -1) {
+        console.log("could not find : break");
+        return
+      }
+
+      var name = input.substring(0, breakIndex);
+      var score = input.substring(breakIndex+1);
+
+      console.log("new entry detected...");
+      console.log(name);
+      console.log(score);
+
+      db.run("INSERT INTO leaderboard VALUES ('" + name + "', " + score + ", 0)");
+
+      console.log("db updated");
      }
  
      });  
