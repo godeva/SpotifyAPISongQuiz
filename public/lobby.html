@@ -19,23 +19,23 @@
         <table class ="votes">
         <tr>
             <td>
-                <a onclick="selectPlaylist('turnt')"><img class = "playlist" src="images/turnt.jpg"></a>
+                <a onclick="selectPlaylist('turnt')" class = "hvr-float-shadow"><img class = "playlist" src="images/turnt.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('top')"><img class = "playlist" src="images/top.jpg"></a>
+                <a onclick="selectPlaylist('top')" class = "hvr-float-shadow"><img class = "playlist" src="images/top.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('hot')"><img class = "playlist" src="images/hot.jpg"></a>
+                <a onclick="selectPlaylist('hot')" class = "hvr-float-shadow"><img class = "playlist" src="images/hot.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('solid')"><img class = "playlist" src="images/solid.jpg"></a>
+                <a onclick="selectPlaylist('solid')" class = "hvr-float-shadow"><img class = "playlist" src="images/solid.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('fresh')"><img class = "playlist" src="images/fresh.jpg"></a>
+                <a onclick="selectPlaylist('fresh')" class = "hvr-float-shadow"><img class = "playlist" src="images/fresh.jpg"></a>
 
             </td>
         </tr>
@@ -76,13 +76,16 @@
   <input id="chatinput"></input>
   <button onclick="sentChat()">chat</button>
   </td>
-<td>
+
+<td class = "start">
 
   
 
   <a href="/quiz"><button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
   </a>
-  <a href="/leaderboard.html">CLICK HERE FOR LEADERBOARD!</a>
+  <br>
+  <br>
+  <a href="/leaderboard"><button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Leaderboard</button></a>
 </td>
 </tr>
 </table>
@@ -184,6 +187,13 @@ window.onbeforeunload = function(event) {
   }, function(req){
   })
 };
+
+
+//Have border appear on click
+$('.playlist').on('click', function(e){
+      e.preventDefault();
+      $(this).toggleClass('playlistSelected');
+    });
 
 </script>
 
