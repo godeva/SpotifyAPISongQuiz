@@ -146,6 +146,7 @@ app.get('/quiz.html', quizHandler)
 app.get('/quiz', quizHandler)
 
 app.get('/leaderboard.html', leaderboardHandler)
+app.get('/leaderboard', leaderboardHandler)
 
 app.get('/leaders', leadersGet)
 
