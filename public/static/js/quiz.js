@@ -330,10 +330,10 @@ $(document).ready(function() {
                 tracks = tracks2
                 break
             case 'top':
-                tracks = tracks3
+                tracks = tracks1
                 break
             case 'hot':
-                tracks = tracks1
+                tracks = tracks3
                 break
             case 'solid':
                 tracks = tracks4
