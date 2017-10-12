@@ -138,7 +138,7 @@ app.get('/leaderboard.html', leaderboardHandler)
 app.get('/leaders', leadersGet)
 
 app.get('/quiz', function(req, res) {
-    res.sendfile(__dirname + '/public/quiz.html');
+    res.sendFile(__dirname + '/public/quiz.html');
 });
 
 app.get('/login', function(req, res) {
