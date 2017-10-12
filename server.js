@@ -133,6 +133,10 @@ app.get('/lobby', lobbyHandler)
 
 app.get('/quiz.html', quizHandler)
 
+app.get('/leaderboard.html', leaderboardHandler)
+
+app.get('/leaders', leadersGet)
+
 app.get('/quiz', function(req, res) {
     res.sendfile(__dirname + '/public/quiz.html');
 });
@@ -226,6 +230,14 @@ function quizHandler (req, res) {
 	} else {
 		res.sendFile(path.join(__dirname, 'public/quiz.html'))
 	}
+}
+
+function leaderboardHandler (req, res) {
+  res.sendFile(path.join(__dirname, 'public/leaderboard.html'))
+}
+
+function leadersGet(req, res) {
+  
 }
 
 

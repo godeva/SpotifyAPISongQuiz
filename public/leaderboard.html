@@ -1,0 +1,105 @@
+<html>
+<head>
+</head>
+
+<body>
+  <div class="content">
+    <h1>Leaderboard<h1>
+    <table id="board" style="width:100%">
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+    </table>
+  </div>
+</body>
+
+<script>
+var names[];
+var scores[];
+
+
+var httpRequest;
+
+function updateSpecificPlaylist() {
+  httpRequest = new XMLHttpRequest();
+
+  if (!httpRequest) {
+    alert('giving up :( cannot create');
+    return false;
+  }
+
+  var searchQuery = "testplaylist";
+  console.log(searchQuery)
+  httpRequest.onreadystatechange = handlePost;
+  httpRequest.open('POST', '/leaders');
+  httpRequest.send('query=' + searchQuery);
+}
+
+function handlePost(req) {
+  console.log("handling post");
+  console.log(req);
+  console.log(req.target);
+  var req_targ = req.target; //whyyyy
+  if (req_targ.readyState !== XMLHttpRequest.DONE) {
+    return;
+  }
+
+  if (req_targ.status === 200) {
+    console.log("2 hunna");
+    var leaders = JSON.parse(req_targ.responseText);
+    console.log(leaders)
+//    localStorage.setItem('flights', req.responseText);
+    //clear the inner html
+    document.querySelector("#board").innerHTML = "<tr><th>Player</th><th>Score</th></tr>";
+    buildList( leaders );
+  }
+}
+
+getDBScores('/leaders');
+
+function getDBScores(url) {
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    handleRes(req);
+  }
+
+  req.open('GET', url);
+  req.send();
+}
+
+function handleRes(req) {
+  console.log(req)
+  console.log("handling result");
+  if( req.readyState !== XMLHttpRequest.DONE )
+  return;
+
+  if(req.status === 200) {
+    console.log("status 200")
+    console.log(req.responseText);
+    var leaders = JSON.parse(req.responseText);
+    console.log(leaders)
+//    localStorage.setItem('flights', req.responseText);
+    buildList( leaders );
+  }
+}
+
+function buildList( A ) {
+
+  var i, toAppendString = "";
+  
+  for (i = 0; i < A.length; i++) {
+    console.log(A[i])
+    toAppendString += "<tr>" + "<td>" + A[i] + "</td>" + "<td>hi</td>" + "</tr>";
+
+
+  } 
+  console.log("finished")
+  console.log(toAppendString)
+
+  document.querySelector("#board").innerHTML += toAppendString;
+
+}
+
+</script>
+</html>
