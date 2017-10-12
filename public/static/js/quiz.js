@@ -13,6 +13,7 @@ $(document).ready(function() {
     var tracks = [];
     var audiotag = document.createElement("AUDIO");
     var delay_run = true;
+    var index_holder = -1;
 
     //var params = getHashParams();
 
@@ -317,7 +318,7 @@ $(document).ready(function() {
 
     function playWrapper() {
         console.log("playWrapper");
-        playSong(tracks[count].url);
+        playSong(tracks[index_holder].url);
     }
 
     function createQuestion() {
@@ -338,6 +339,7 @@ $(document).ready(function() {
             if (delay_run === true) {
                 console.log("first run");
                 delay_run = false;
+                index_holder = count;
                 setTimeout( playWrapper, 5000);
             } else {
                 playSong(tracks[count].url);
