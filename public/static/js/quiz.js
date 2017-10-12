@@ -7,7 +7,7 @@ $(document).ready(function() {
     var answers = ['a', 'b', 'c', 'd'];
     var score = 0;
     var count = 0;
-    var user = 'bob';
+    var user = 'dude';
     var playlists = [];
     var tracks = [];
 
@@ -64,9 +64,10 @@ $(document).ready(function() {
             800);
     }
 
+    
     function noPlaylists() {
         $('#welcome').fadeIn();
-        $('#user').html('So ' + user.id + ', this is awkward....');
+        $('#user').html('So ' + user+ ', this is awkward....');
         $('#message').html('You have no playlists...');
         $('#countdown').hide();
         setTimeout(function() {
@@ -74,7 +75,7 @@ $(document).ready(function() {
     }
 
     function displayWelcome() {
-        $('#user').html('Welcome, ' + user.id + '!');
+        $('#user').html('Welcome, ' + user + '!');
         $('#message').html('The quiz will begin in');
         setTimeout(function() {
             $('#welcome').fadeIn(function() {
@@ -88,19 +89,6 @@ $(document).ready(function() {
         $('#counter').html('Question: ' + 1);
     }
 
-/*
-    function getUser() {
-        return $.ajax({
-            url: 'https://api.spotify.com/v1/me',
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            },
-            success: function(response) {
-                user = response;
-            }
-        });
-    }
-*/
 /*
     function getPlaylists() {
         return $.ajax({
@@ -207,17 +195,57 @@ $(document).ready(function() {
         $('#counter').html('Question: ' + (count + 1));
     }
 
-    function setAnswer() {
+    function setAnswer(response) {
         var randomNumber = getRandomNumber(4);
         answer = answers[randomNumber];
         $('#' + answer).html(tracks[count].artist);
+        switch (answer){
+            case 'a':
+                fillNotAnswer($('#b'),  $('#c'),  $('#d'), response)
+                break
+            case 'b':
+                fillNotAnswer($('#a'),  $('#c'),  $('#d'), response)
+                break
+            case 'c':
+                fillNotAnswer($('#a'),  $('#b'),  $('#d'), response)
+                break
+            case 'd':
+                fillNotAnswer($('#a'),  $('#b'),  $('#c'), response)
+                break
+        }
+    }
+
+    function fillNotAnswer(ele1, ele2, ele3, response) {
+        var index = 0
+        var numNotAnswer = 0
+        while (numNotAnswer < 3) {
+            if (response.artists[index].name !== tracks[count].artist) {
+                var ele
+                switch (numNotAnswer) {
+                    case 0:
+                        ele = ele1
+                        break
+                    case 1:
+                        ele = ele2
+                        break
+                    case 2:
+                        ele = ele3
+                        break
+                    default:
+                        break
+                }
+                ele.html(response.artists[index].name);
+                numNotAnswer++
+            }
+            index++
+        }
     }
 
     function createQuestion() {
         if (count == tracks.length) {
             $('#quiz').fadeOut(function() {
                 $('#welcome').fadeIn();
-                $('#user').html('Wow ' + user.id + '!');
+                $('#user').html('Wow ' + user + '!');
                 $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!');
                 $('#countdown').html('');
                 setTimeout(function() {
@@ -239,15 +267,9 @@ $(document).ready(function() {
                     {name: 'Lane Harrison'}]
                 }
                 shuffleArray(response.artists);
-                console.log(count)
-                console.log(tracks[count])
                 $('#track').html(tracks[count].name);
                 //$('#playlist').html(tracks[count].playlist);
-                $('#a').html(response.artists[0].name);
-                $('#b').html(response.artists[1].name);
-                $('#c').html(response.artists[2].name);
-                $('#d').html(response.artists[3].name);
-                setAnswer();
+                setAnswer(response);
                 count++;
             //});
         }
@@ -280,6 +302,7 @@ $(document).ready(function() {
         }
     }
     */
+    //getUser(function () {
     displayWelcome();
     tracks = [
         {name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth'},
@@ -295,4 +318,5 @@ $(document).ready(function() {
     ]
     shuffleArray(tracks);
     createQuestion();
+    //}
 });
