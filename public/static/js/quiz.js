@@ -12,6 +12,7 @@ $(document).ready(function() {
     var playlistName;
     var tracks = [];
     var audiotag = document.createElement("AUDIO");
+    var delay_run = true;
 
     //var params = getHashParams();
 
@@ -115,21 +116,25 @@ $(document).ready(function() {
     function playSong(url) {
         audiotag.pause();
         audiotag.src = url;
+
+
         var playPromise = audiotag.play();
 
+    
+        // In browsers that don’t yet support this functionality,
+        // playPromise won’t be defined.
+        if (playPromise !== undefined) {
+            playPromise.then(function () {
+                audiotag.play();
+                // Automatic playback started!
+            }).catch(function (error) {
+               audiotag.play();
+                // Automatic playback failed.
+                // Show a UI element to let the user manually start playback.
+            });
+        }
+
         
-                // In browsers that don’t yet support this functionality,
-                // playPromise won’t be defined.
-                if (playPromise !== undefined) {
-                    playPromise.then(function () {
-                        audiotag.play()
-                        // Automatic playback started!
-                    }).catch(function (error) {
-                        audiotag.play()
-                        // Automatic playback failed.
-                        // Show a UI element to let the user manually start playback.
-                    });
-                }
                 
     }
 /*
@@ -310,6 +315,11 @@ $(document).ready(function() {
         }
     }
 
+    function playWrapper() {
+        console.log("playWrapper");
+        playSong(tracks[count].url);
+    }
+
     function createQuestion() {
         if (count == tracks.length) {
             audiotag.pause();
@@ -325,7 +335,13 @@ $(document).ready(function() {
                 }, 5000);
             });
         } else {
-            playSong(tracks[count].url);
+            if (delay_run === true) {
+                console.log("first run");
+                delay_run = false;
+                setTimeout( playWrapper, 5000);
+            } else {
+                playSong(tracks[count].url);
+            }
             //getRelatedArtists(tracks[count].artist_id).then(function(response) {
                  var response = {
                     artists:[
