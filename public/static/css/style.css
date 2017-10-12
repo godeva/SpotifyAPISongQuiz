@@ -222,7 +222,7 @@ input {
 
 div.leadHead {
     width: 100%;
-    height: 200px;
+    height: 20px;
 }
 
 h1.leadHead {
@@ -231,7 +231,68 @@ h1.leadHead {
 }
 
 div.playlistMenu {
-    width: 60%;
+    width: 800px;
     height: 100px;
+    text-align: center;
 }
+div.leadHolder {
+    width: 800px;
+    text-align: center;
+
+}
+
+span.playlists {
+    width: 120px;
+    height: 50px;
+    background: #77dd77;
+    color: white;
+    font-family: arial;
+    font-size: 1.2em;
+    padding: 10px;
+}
+
+span > a {
+    color: white;
+}
+
+span.lead {
+    background-image: url('../images/green.jpg');
+    width: 200px;
+    height: 75px;
+    background: #77dd77;
+    font-size: 2.0em;
+    padding: 10px;
+}
+
+.hvr-float {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  transition-duration: 0.3s;
+  transition-property: transform;
+  transition-timing-function: ease-out;
+}
+.hvr-float:hover,
+.hvr-float:focus,
+.hvr-float:active {
+  transform: translateY(-8px);
+}
+
+
+.centerSquare{
+    width: 900px;
+    height:1000px;
+    position:absolute;
+    left:25%;
+    top:15%;
+    margin:-50px 0 0 -50px;
+    border: 2px, solid, #77dd77;
+    background-image: url('../images/green.jpg');
+    border-radius: 25px;
+}
+
+
 

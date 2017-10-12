@@ -1,34 +1,49 @@
 <html>
 <head>
+  <title>Leaderboard - Guess that Song</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  <link href="css/hover.css" rel="stylesheet" media="all">
 </head>
 
 <body>
   <div class="content">
     <div class ="leadHead">
       <a href = "/lobby.html"> Return to Lobby </a> <!-- add animation to this!!! -->
-      <h1 style="text-align: center;" class = "leadHead"><u>Leaderboard</u></h1>
     </div>
-    <div class="playlistMenu">
-      <table style="width: 100%; text-align: center;">
-        <tr>
-          <td><a href="#">Hey</a></td>
-          <td><a href="#">Hey</a></td>
-          <td><a href="#">Hey</a></td>
-          <td><a href="#">Hey</a></td>
-          <td><a href="#">Hey</a></td>
+
+  <div class = "centerSquare">
+      <h1 style="text-align: center; color: white;" class = "leadHead"><u>Leaderboard</u></h1>
+      <br>
+      <br>
+    
+
+    <div style="margin: 0 auto;" class ="leadHolder">
+      <table style="width: 800px; text-align: center; margin: 0 auto;">
+          <tr>
+          <td><span class ="playlists hvr-float"><a href="#">Get Turnt</a></span></td>
+          <td><span class ="playlists hvr-float"><a href="#">Top Hits</a></span></td>
+          <td><span class ="playlists hvr-float"><a href="#">Country</a></span></td>
+          <td><span class ="playlists hvr-float"><a href="#">Rock Solid</a></span></td>
+          <td><span class ="playlists hvr-float"><a href="#">Electronic</a></span></td>
         </tr>
       </table>    
-  
+
     </div>
-  </div>
+    <br>
+    <br>
     
-    <table id="board" style="width:100%">
+    <table class = "table borderStuff" id="board" style="width: 800px; margin: 20px auto; text-align: left;">
+      <thead class="thead-inverse" style="text-align: left;">
       <tr>
         <th>Rank</th>
         <th>Player</th>
         <th>Score</th>
       </tr>
+      </thead>
+    <tbody>
     </table>
+    </div>
   </div>
 </body>
 
