@@ -117,7 +117,7 @@ socket.on('newChat', function (data) {
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText !== 'bad'){
     yourname = req.responseText
-    //socket.emit('getList')
+    socket.emit('getList')
     console.log('your name is: '+yourname)
   }
 })

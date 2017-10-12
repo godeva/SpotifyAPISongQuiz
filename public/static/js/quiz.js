@@ -73,6 +73,8 @@ $(document).ready(function() {
         $('#message').html("You didn't select a playlist...");
         $('#countdown').hide();
         setTimeout(function() {
+            console.log($(window)[0])
+            $(window)[0].location.replace('/lobby')
         }, 4000);
     }
 
@@ -295,6 +297,8 @@ $(document).ready(function() {
                 $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!<br><br> <u><a id ="lobby" href="lobby.html">Return to the Lobby</a></u>');
                 $('#countdown').html('');
                 setTimeout(function() {
+                    console.log($(window)[0])
+                    $(window)[0].location.replace('/lobby')
                 }, 5000);
             });
         } else {
@@ -386,10 +390,11 @@ $(document).ready(function() {
         }
         if (tracks.length <= 0) {
             noPlaylists()
+        } else {
+            displayWelcome()
+            shuffleArray(tracks)
+            createQuestion()
         }
-        displayWelcome()
-        shuffleArray(tracks)
-        createQuestion()
     })
 
     function getAT(callback) {
