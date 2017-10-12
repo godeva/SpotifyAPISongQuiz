@@ -274,6 +274,7 @@ app.get('/getGameData', function (req, res) {
   res.send(game)
 })
 
+
 function indexOf (name, list) {
   var i = -1
   list.forEach(function(item, index, array) {

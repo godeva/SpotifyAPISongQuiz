@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     var questionHeight;
+    var access_token
     var seconds = 5;
     var clicked = false;
     var answer;
@@ -320,6 +321,7 @@ $(document).ready(function() {
     }
     */
 
+    //getAT(function(){})
     newXHR ('GET', '/getGameData', function(req){req.send()}, function(req){
         var data = JSON.parse(req.responseText)
         user = data.name
@@ -352,6 +354,19 @@ $(document).ready(function() {
         shuffleArray(tracks)
         createQuestion()
     })
+
+    function getAT(callback) {
+        newXHR ('GET', '/accessToken', function(req){req.send()}, function(req){
+            var rt = req.responseText
+            if (rt) {
+                access_token = rt
+                console.log(rt)
+                callback()
+            } else {
+                console.log('no access_token')
+            }
+        }) 
+    }
     //-- Today's Top Hits --
     
 // hot
