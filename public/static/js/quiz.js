@@ -11,6 +11,7 @@ $(document).ready(function() {
     var user = 'dude';
     var playlistName;
     var tracks = [];
+    var audiotag = document.createElement("AUDIO");
 
     //var params = getHashParams();
 
@@ -109,6 +110,27 @@ $(document).ready(function() {
         if(req.status === 200) {
             handler (req)
         }
+    }
+
+    function playSong(url) {
+        audiotag.pause();
+        audiotag.src = url;
+        var playPromise = audiotag.play();
+
+        
+                // In browsers that don’t yet support this functionality,
+                // playPromise won’t be defined.
+                if (playPromise !== undefined) {
+                    playPromise.then(function () {
+                        audiotag.play()
+                        // Automatic playback started!
+                    }).catch(function (error) {
+                        audiotag.play()
+                        // Automatic playback failed.
+                        // Show a UI element to let the user manually start playback.
+                    });
+                }
+                
     }
 /*
     function getPlaylists() {
@@ -290,6 +312,7 @@ $(document).ready(function() {
 
     function createQuestion() {
         if (count == tracks.length) {
+            audiotag.pause();
             sendScoreToDB();
             $('#quiz').fadeOut(function() {
                 $('#welcome').fadeIn();
@@ -302,6 +325,7 @@ $(document).ready(function() {
                 }, 5000);
             });
         } else {
+            playSong(tracks[count].url);
             //getRelatedArtists(tracks[count].artist_id).then(function(response) {
                  var response = {
                     artists:[
@@ -413,72 +437,72 @@ $(document).ready(function() {
     
 // hot
     var tracks1 = [
-        {name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth'},
-        {name: 'Young Dumb and Broke', artist: 'Khalid', artist_id: 'Khalid'},
-        {name: 'Thunder', artist: 'Imagine Dragons', artist_id: 'Imagine Dragons'},
-        {name: 'Bodak Yellow', artist: 'Cardi B', artist_id: 'Cardi B'},
-        {name: 'What Loves Do', artist: 'Maroon 5', artist_id: 'Maroon 5'},
-        {name: 'Lonely Together', artist: 'Avicii', artist_id: 'Avicii'},
-        {name: 'Love Galore', artist: 'SZA', artist_id: 'SZA'},
-        {name: 'Too Much To Ask', artist: 'Niall Horan', artist_id: 'Niall Horan'},
-        {name: 'Sorry Not Sorry', artist: 'Demi Lovato', artist_id: 'Demi Lovato'},
-        {name: 'Sativa', artist: 'Jhene Aeiko', artist_id: 'Jhene Aeiko'}
+        { name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth', url: 'https://p.scdn.co/mp3-preview/8857931984acbbcca43e73745084cc76aba25845?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Young Dumb and Broke', artist: 'Khalid', artist_id: 'Khalid', url: 'https://p.scdn.co/mp3-preview/6f984c9c6e43eccb00fefdce091212f08887258a?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Bodak Yellow', artist: 'Cardi B', artist_id: 'Cardi B', url: 'https://p.scdn.co/mp3-preview/35254f7611813c692709161d41cb04a694c9b5fa?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Love Galore', artist: 'SZA', artist_id: 'SZA', url: 'https://p.scdn.co/mp3-preview/34ee046041c05b75609bd7eec1e97b6c7cb4fe4f?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Good Old Days', artist: 'Macklemore', artist_id: 'Macklemore', url: 'https://p.scdn.co/mp3-preview/382e98fe869bf3ce35acf0f01b09cc199a3292be?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Havana', artist: 'Camila Cabello', artist_id: 'Camila Cabello', url: 'https://p.scdn.co/mp3-preview/1f789c77d7e08e3328de28114f4ef7a2e840b631?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Perfect', artist: 'Ed Sheeran', artist_id: 'Ed Sheeran', url: 'https://p.scdn.co/mp3-preview/9779493d90a47f29e4257aa45bc6146d1ee9cb26?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Questions', artist: 'Chris Brown', artist_id: 'Chris Brown', url: 'https://p.scdn.co/mp3-preview/94c692b2db1bd951be264d9420b02af12f4f8240?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Easy Love', artist: 'Lauv', artist_id: 'Lauv', url: 'https://p.scdn.co/mp3-preview/79fd7debbc7b26c8acb5448a13e5bc4cc11c3225?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'What About Us', artist: 'P!nk', artist_id: 'P!nk', url: 'https://p.scdn.co/mp3-preview/444931f5decdb6bbaeade77d1bcbb82f5258c1cf?cid=f067d80090d34e11b883b81236ad9316' }
     ]
 
 //     //     -- Get Turnt --
     var tracks2 = [
-        {name: 'Rockstar', artist: 'Post Malone', artist_id: 'Post Malone'},
-        {name: 'Slippery', artist: 'Migos', artist_id: 'Migos'},
-        {name: 'Gucci Gang', artist: 'Lil Pump', artist_id: 'Lil Pump'},
-        {name: 'Headlines', artist: 'Drake', artist_id: 'Drake'},
-        {name: 'March Madness', artist: 'Future', artist_id: 'Future'},
-        {name: 'Butterfly Effect', artist: 'Travis Scott', artist_id: 'Travis Scott'},
-        {name: 'No Flockin', artist: 'Kodak Black', artist_id: 'Kodak Black'},
-        {name: 'The Way Life Goes', artist: 'Lil Uzi Vert', artist_id: 'Lil Uzi Vert'},
-        {name: 'Plain Jane', artist: 'A$AP Ferg', artist_id: 'A$AP Ferg'},
-        {name: 'Ex Calling', artist: '6LACK', artist_id: '6LACK'}
+        { name: 'Slippery', artist: 'Migos', artist_id: 'Migos', url: 'https://p.scdn.co/mp3-preview/25bf4c7c13f59a0bd7f0ce023a524892a7216872?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Gucci Gang', artist: 'Lil Pump', artist_id: 'Lil Pump', url: 'https://p.scdn.co/mp3-preview/a6d17f8c01dacc5b570438b8547c28539e1896ea?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'March Madness', artist: 'Future', artist_id: 'Future', url: 'https://p.scdn.co/mp3-preview/c18456723a2560161a736a91cff96d84b658d854?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Butterfly Effect', artist: 'Travis Scott', artist_id: 'Travis Scott', url: 'https://p.scdn.co/mp3-preview/626db743053d334941ffe68648be4a339ecd69db?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'No Flockin', artist: 'Kodak Black', artist_id: 'Kodak Black', url: 'https://p.scdn.co/mp3-preview/ab8322b29b28cd0610593ddf7f736631c8bbfca8?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'The Way Life Goes', artist: 'Lil Uzi Vert', artist_id: 'Lil Uzi Vert', url: 'https://p.scdn.co/mp3-preview/4d282cabd448444f2618fdb05302bc1cd8ecc64e?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Plain Jane', artist: 'A$AP Ferg', artist_id: 'A$AP Ferg', url: 'https://p.scdn.co/mp3-preview/044999082327cc7c53905cdecff0630705109d65?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: '1942 Flows', artist: 'Meek Mill', artist_id: 'Meek Mill', url: 'https://p.scdn.co/mp3-preview/d63b48b11ef3afeedda4aa60d5d4cd034cb97bc0?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Everybody Mad', artist: 'O.T. Genasis', artist_id: 'O.T. Genasis', url: 'https://p.scdn.co/mp3-preview/1ab74d31b596f2391f7d05924f934a491cd4d542?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'I Got a Stick', artist: 'YBN Nahmir', artist_id: 'YBN Nahmir', url: 'https://p.scdn.co/mp3-preview/107441ee7f211f44f994b1cac032f100ef9e8c97?cid=f067d80090d34e11b883b81236ad9316' }
     ]
 //
-//     // -- Today's Top Hits --
+//     // -- country --
     var tracks3 = [
-        {name: 'What Makes You Country', artist: 'Luke Bryan', artist_id: 'Luke Bryan'},
-        {name: 'The Rest of our Life', artist: 'Tim McGraw', artist_id: 'Tim McGraw'},
-        {name: 'Body Like a Backroad', artist: 'Sam Hunt', artist_id: 'Sam Hunt'},
-        {name: 'Back to Us', artist: 'Rascal Flatts', artist_id: 'Rascal Flatts'},
-        {name: 'All the Pretty Girls', artist: 'Kenny Chesney', artist_id: 'Kenny Chesney'},
-        {name: 'Unforgettable', artist: 'Thomas Rhett', artist_id: 'Thomas Rhett'},
-        {name: 'Smooth', artist: 'Florida Georgia Line', artist_id: 'Florida Georgia Line'},
-        {name: 'Kiss Somebody', artist: 'Morgan Evans', artist_id: 'Morgan Evans'},
-        {name: 'They Dont Know', artist: 'Jason Aldean', artist_id: 'Jason Aldean'},
-        {name: 'Hooked', artist: 'Dylan Scott', artist_id: 'Dylan Scott'}
+        { name: 'The Rest of Our Life', artist: 'Tim McGraw', artist_id: 'Tim McGraw', url: 'https://p.scdn.co/mp3-preview/e468f42357ae4b03cad36c1de64f2ae407f1d27a?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'All the Pretty Girls', artist: 'Kenny Chesney', artist_id: 'Kenny Chesney', url: 'https://p.scdn.co/mp3-preview/bc8fea30888dba8ab9eeacad1683d51fbfaf0d37?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Kiss Somebody', artist: 'Morgan Evans', artist_id: 'Morgan Evans', url: 'https://p.scdn.co/mp3-preview/d66c7765fe45acfe1288eaf1baaa6be7da8a9463?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'They Don\'t Know', artist: 'Jason Aldean', artist_id: 'Jason Aldean', url: 'https://p.scdn.co/mp3-preview/da71c28feaa15303a454afef9f73dd97d9dd76a8?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Hooked', artist: 'Dylan Scott', artist_id: 'Dylan Scott', url: 'https://p.scdn.co/mp3-preview/d2419d8b66eb08b7d566208d4bcf813fdb2b38df?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Be with Me', artist: 'Old Dominion', artist_id: 'Old Dominion', url: 'https://p.scdn.co/mp3-preview/ba4aeac16c18f2590693abe8f1d22651e7fd391b?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Dear Hate', artist: 'Maren Morris', artist_id: 'Maren Morris', url: 'https://p.scdn.co/mp3-preview/e82aab24039e83da8ee0cdd10bf4097c41339ae9?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Greatest Love Story', artist: 'LANCO', artist_id: 'LANCO', url: 'https://p.scdn.co/mp3-preview/0be63634aed195b2463a8faab7b032963321e416?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'The Long Way', artist: 'Brett Eldredge', artist_id: 'Brett Eldredge', url: 'https://p.scdn.co/mp3-preview/bb9dae141e6796c24e3e60eadc5ca863ce788f6e?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Man Enough Now', artist: 'Chris Bandi', artist_id: 'Chris Bandi', url: 'https://p.scdn.co/mp3-preview/7a19ff57c92c3ea0b73832499fc33c166d966a75?cid=f067d80090d34e11b883b81236ad9316' }
     ]
 //
 //
 // // -- Rock Solid --
     var tracks4 = [
-        {name: 'Everlong', artist: 'Foo Fighters', artist_id: 'Foo Fighters'},
-        {name: 'Numb', artist: 'Linkin Park', artist_id: 'Linkin Park'},
-        {name: 'Uprising', artist: 'Muse', artist_id: 'Muse'},
-        {name: 'Pardon Me', artist: 'Incubus', artist_id: 'Incubus'},
-        {name: 'Miss Murder', artist: 'AFI', artist_id: 'AFI'},
-        {name: 'Savior', artist: 'Rise Against', artist_id: 'Rise Against'},
-        {name: 'Self Esteem', artist: 'The Offspring', artist_id: 'The Offspring'},
-        {name: 'Sex on Fire', artist: 'Kings of Leon', artist_id: 'Kings of Leon'},
-        {name: 'Hail to the King', artist: 'Avenged Sevenfold', artist_id: 'Avenged Sevenfold'},
-        {name: 'Even Flow', artist: 'Pearl Jam', artist_id: 'Pearl Jam'}
+        { name: 'Everlong', artist: 'Foo Fighters', artist_id: 'Foo Fighters', url: 'https://p.scdn.co/mp3-preview/4a2dc307a71393a695d69b16407cd73e1e234941?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Numb', artist: 'Linkin Park', artist_id: 'Linkin Park', url: 'https://p.scdn.co/mp3-preview/e6ccf7717f8a167bfea4afc1bf7da1a0cd707fbb?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Uprising', artist: 'Muse', artist_id: 'Muse', url: 'https://p.scdn.co/mp3-preview/104ad0ea32356b9f3b2e95a8610f504c90b0026b?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Sex on Fire', artist: 'Kings of Leon', artist_id: 'Kings of Leon', url: 'https://p.scdn.co/mp3-preview/8cca3506fa42dd9cc51a761386d064b502d1a4c6?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Hail to the King', artist: 'Avenged Sevenfold', artist_id: 'Avenged Sevenfold', url: 'https://p.scdn.co/mp3-preview/7a8932458d8ea00a425b629f43c4d44af0c9a029?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Sail', artist: 'AWOLNATION', artist_id: 'AWOLNATION', url: 'https://p.scdn.co/mp3-preview/6f5f2bfd5287c6daac7d493cca5b10aaa4041859?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Song 2', artist: 'Blur', artist_id: 'Blur', url: 'https://p.scdn.co/mp3-preview/183c0855e94b58dcb267e2b0721d4a3c99260acf?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Headstrong', artist: 'Trapt', artist_id: 'Trapt', url: 'https://p.scdn.co/mp3-preview/08bf3158a4f3982b85c728831a10c20fd62f0ada?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Seven Nation Army', artist: 'The White Stripes', artist_id: 'The White Stripes', url: 'https://p.scdn.co/mp3-preview/82731065c728a8e9baf09f4e1af235265cd19054?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Under the Bridge', artist: 'Red Hot Chili Peppers', artist_id: 'Red Hot Chili Peppers', url: 'https://p.scdn.co/mp3-preview/90e41778392f27b6f7dd82db4c90916b3727aa6a?cid=f067d80090d34e11b883b81236ad9316' }
     ]
     //
     // // -- Fresh Electronic --
     var tracks5 = [
-        {name: 'Jealousy', artist: 'Disciples', artist_id: 'Disciples'},
-        {name: 'Dont Stop', artist: 'Tiesto', artist_id: 'Tiesto'},
-        {name: 'Fever', artist: 'Nora En Pure', artist_id: 'Nora En Pure'},
-        {name: 'Resolve', artist: 'Audien', artist_id: 'Audien'},
-        {name: 'Revolt', artist: 'John Christian', artist_id: 'John Christian'},
-        {name: 'Time For the Techno', artist: 'Carnage', artist_id: 'Carnage'},
-        {name: 'Love Me', artist: 'Beau Collins', artist_id: 'Beau Collins'},
-        {name: 'Once Upon a Time', artist: '7 Skies', artist_id: '7 Skies'},
-        {name: 'Brooke', artist: 'AxMod', artist_id: 'AxMod'},
-        {name: 'Nobody But You', artist: 'KRANE', artist_id: 'KRANE'}
+        { name: 'Jealousy', artist: 'Disciples', artist_id: 'Disciples', url: 'https://p.scdn.co/mp3-preview/54ec39c06dbf95fd446b4ea013cd0de24fb6db61?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Don\'t Stop', artist: 'Tiesto', artist_id: 'Tiesto', url: 'https://p.scdn.co/mp3-preview/d4f773a62ecf14ba158bc4274307264552a13c93?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Fever', artist: 'Nora En Pure', artist_id: 'Nora En Pure', url: 'https://p.scdn.co/mp3-preview/da6a0f8e569df008d674cd5f2bc68edd6e91514e?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Revolt', artist: 'John Christian', artist_id: 'John Christian', url: 'https://p.scdn.co/mp3-preview/61ccf3cc620b18647206f5cec1e43864f95fefb9?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Time For the Techno', artist: 'Carnage', artist_id: 'Carnage', url: 'https://p.scdn.co/mp3-preview/d7156297749bce53139e445bc4c65c8b9f6bb537?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Time', artist: 'Z.Tao', artist_id: 'Z.Tao', url: 'https://p.scdn.co/mp3-preview/c11d4ff9e1aa8c2ee4baf0c3df0e4155d7a93c4d?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Save My Soul', artist: 'Tuff London', artist_id: 'Tuff London', url: 'https://p.scdn.co/mp3-preview/c3f6bdb89269ed30749cae3b91fe0abe23f943a4?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'I Can\'t Stop', artist: 'DJ Licious', artist_id: 'DJ Licious', url: 'https://p.scdn.co/mp3-preview/9e36480e6eb0ba22a6e8fa698141940185d86165?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'The Impact', artist: 'SWACQ', artist_id: 'SWACQ', url: 'https://p.scdn.co/mp3-preview/65876eb6b4a42e4ac4898739dba208964770ed7b?cid=f067d80090d34e11b883b81236ad9316' },
+        { name: 'Love Me', artist: 'Beau Collins', artist_id: 'Beau Collins', url: 'https://p.scdn.co/mp3-preview/7c31ce17179b51b8b0b520b1639787d11e8ca949?cid=f067d80090d34e11b883b81236ad9316' }
     ]
 });
