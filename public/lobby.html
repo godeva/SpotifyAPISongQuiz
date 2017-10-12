@@ -19,23 +19,23 @@
         <table class ="votes">
         <tr>
             <td>
-                <img class = "playlist" src="images/turnt.jpg">
+                <a onclick="selectPlaylist('turnt')"><img class = "playlist" src="images/turnt.jpg"></a>
 
             </td>
              <td>
-                <img class = "playlist" src="images/top.jpg">
+                <a onclick="selectPlaylist('top')"><img class = "playlist" src="images/top.jpg"></a>
 
             </td>
              <td>
-                <img class = "playlist" src="images/hot.jpg">
+                <a onclick="selectPlaylist('hot')"><img class = "playlist" src="images/hot.jpg"></a>
 
             </td>
              <td>
-                <img class = "playlist" src="images/solid.jpg">
+                <a onclick="selectPlaylist('solid')"><img class = "playlist" src="images/solid.jpg"></a>
 
             </td>
              <td>
-                <img class = "playlist" src="images/fresh.jpg">
+                <a onclick="selectPlaylist('fresh')"><img class = "playlist" src="images/fresh.jpg"></a>
 
             </td>
         </tr>
@@ -80,7 +80,7 @@
 
   
 
-  <a href="/login"><button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
+  <a href="/quiz"><button onclick="" type="button" class="btn btn-info" style= "width: 200px; height: 50px; color: white; font-size:26; background-color: green; border-color: white;">Start Match</button>
   </a>
   <a href="/leaderboard.html">CLICK HERE FOR LEADERBOARD!</a>
 </td>
@@ -114,10 +114,18 @@ socket.on('newChat', function (data) {
 newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
   if (req.responseText !== 'bad'){
     yourname = req.responseText
-    socket.emit('getList')
+    //socket.emit('getList')
     console.log('your name is: '+yourname)
   }
 })
+
+function selectPlaylist(name) {
+  newXHRRequest('POST', '/selectPlaylist', function(req){
+    req.send(name)
+  }, function(req){
+    console.log('you select playlist ' + name)
+  })
+}
 
 function sentChat() {
   if (chatinput.value){
@@ -138,7 +146,7 @@ function buildTable (list) {
     table.innerHTML = newtable
 }
 
-countdown( "countdown", 1, 5 );
+//countdown( "countdown", 1, 5 );
 
 // definitions
   function countdown( elementName, minutes, seconds ){

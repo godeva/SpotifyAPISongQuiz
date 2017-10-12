@@ -149,73 +149,6 @@ app.get('/leaderboard.html', leaderboardHandler)
 
 app.get('/leaders', leadersGet)
 
-app.get('/login', function(req, res) {
-
-    var state = generateRandomString(16);
-    res.cookie(stateKey, state);
-
-    var scope = 'user-read-private user-read-email';
-    res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-            response_type: 'code',
-            client_id: client_id,
-            scope: scope,
-            redirect_uri: redirect_uri,
-            state: state
-        }));
-});
-
-app.get('/callback', function(req, res) {
-
-    var code = req.query.code || null;
-    var state = req.query.state || null;
-    var storedState = req.cookies ? req.cookies[stateKey] : null;
-
-    if (state === null || state !== storedState) {
-        res.redirect('/#' +
-            querystring.stringify({
-                error: 'state_mismatch'
-            }));
-    } else {
-        res.clearCookie(stateKey);
-        var authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
-            form: {
-                code: code,
-                redirect_uri: redirect_uri,
-                grant_type: 'authorization_code'
-            },
-            headers: {
-                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-            },
-            json: true
-        };
-
-        request.post(authOptions, function(error, response, body) {
-            if (!error && response.statusCode === 200) {
-
-                var access_token = body.access_token;
-
-                var options = {
-                    url: 'https://api.spotify.com/v1/me',
-                    headers: { 'Authorization': 'Bearer ' + access_token },
-                    json: true
-                };
-
-                res.redirect('quiz/#' +
-                    querystring.stringify({
-                        access_token: access_token
-                    }));
-            } else {
-                res.redirect('/#' +
-                    querystring.stringify({
-                        error: 'invalid_token'
-                    }));
-            }
-        });
-    }
-});
-
 function indexHandler (req, res) {
 	if (req.session.name) {
 		res.redirect('/lobby')
@@ -294,6 +227,7 @@ app.post('/initUsername', function (req, res) {
       // if not exist
       if (!exist) {
         req.session.name = name
+        req.session.playlist = 0
       	playerList.push({name: req.session.name, currentScore: 0, bestScore: 0})
         console.log(name + ' joined')
         res.send('good')
@@ -308,6 +242,24 @@ app.post('/initUsername', function (req, res) {
   })
 })
 
+app.post('/selectPlaylist', function(req, res) {
+  var postdata = ''
+  req.on('data', function(d) {
+    postdata += d
+    if (postdata.length > 1e6) {
+      // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+      request.connection.destroy();
+    }
+  })
+  req.on('end', function() {
+    if (req.session) {
+      req.session.playlist = postdata
+    }
+    console.log(req.session.name + ' selected ' + postdata)
+    res.send()
+  })
+})
+
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
   	var content = JSON.stringify(playerList)
@@ -317,8 +269,9 @@ app.get('/activeList', function (req, res) {
 	var content = JSON.stringify(activeList)
   	res.send(content)
 })
-app.get('/getUser', function (req, res) {
-  res.send(req.session.name)
+app.get('/getGameData', function (req, res) {
+  var game = {name: req.session.name, playlist: req.session.playlist}
+  res.send(game)
 })
 
 function indexOf (name, list) {

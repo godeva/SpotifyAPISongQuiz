@@ -8,7 +8,7 @@ $(document).ready(function() {
     var score = 0;
     var count = 0;
     var user = 'dude';
-    var playlists = [];
+    var playlistNumber;
     var tracks = [];
 
     //var params = getHashParams();
@@ -332,8 +332,10 @@ $(document).ready(function() {
         {name: 'Sativa', artist: 'Jhene Aeiko', artist_id: 'Jhene Aeiko'}
     ]
 
-    newXHR ('GET', '/getUser', function(req){req.send()}, function(req){
-        user = req.responseText
+    newXHR ('GET', '/getGameData', function(req){req.send()}, function(req){
+        var data = JSON.parse(req.responseText)
+        user = data.name
+        playlistNumber = data.playlist
         displayWelcome()
         shuffleArray(tracks)
         createQuestion()
