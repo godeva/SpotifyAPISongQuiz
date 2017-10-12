@@ -263,14 +263,14 @@ $(document).ready(function() {
             $('#quiz').fadeOut(function() {
                 $('#welcome').fadeIn();
                 $('#user').html('Wow ' + user + '!');
-                $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!');
+                $('#message').html('You answered all ' + (count) + ' questions....<br>Your final score was ' + score + '!<br><br> <u><a id ="lobby" href="lobby.html">Return to the Lobby</a></u>');
                 $('#countdown').html('');
                 setTimeout(function() {
                 }, 5000);
             });
         } else {
             //getRelatedArtists(tracks[count].artist_id).then(function(response) {
-                var response = {
+                 var response = {
                     artists:[
                     {name: 'Charlie Puth'},
                     {name: 'Khalid'},
@@ -281,7 +281,16 @@ $(document).ready(function() {
                     {name: 'SZA'},
                     {name: 'Niall Horan'},
                     {name: 'Demi Lovato'},
-                    {name: 'Lane Harrison'}]
+                    {name: 'Lane Harrison'},
+                    {name: '21 Savage'},
+                    {name: 'Diplo'},
+                    {name: 'La Roux'},
+                    {name: 'Blake Shelton'},
+                    {name: 'Kendrick Lamar'},
+                    {name: 'Eminem'},
+                    {name: 'Alessia Cara'},
+                    {name: 'Logic'},
+                    {name: 'Sam Smith'}]
                 }
                 shuffleArray(response.artists);
                 $('#track').html(tracks[count].name);
