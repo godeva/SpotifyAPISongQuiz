@@ -261,6 +261,50 @@ app.post('/selectPlaylist', function(req, res) {
   })
 })
 
+app.post('/leaders', function(req, res) {
+   var output_players = [];
+   else if (req.method === 'POST') {
+     console.log("detected post");
+     var postdata = ''
+     req.on('data', function(d) {
+       postdata += d
+       if (postdata.length > 1e6) {
+         //input too large, nuke request
+         req.connection.destroy();
+       }
+     });
+     req.on('end', function() {
+       console.log("req end")
+       console.log(postdata)
+       //parse postdata
+       var input;
+       if (postdata.substring(0, 6) === "plist=") {
+         console.log("searching...");
+         input = postdata.substring(6);
+         //protect against injection
+         if (input.includes(";") === true) {
+           return
+         }
+ 
+         db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + ";", function(err, row) {
+             output = row.player;
+             output_players.push(output)
+           }, function() {
+             console.log("yas fam :)")
+             console.log("yas fam")
+             console.log(output_players)
+             callbackSend(res, output_players);
+           });
+       }
+ 
+     });
+   }
+ 
+ }
+ });
+ 
+
+
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
   	var content = JSON.stringify(playerList)
