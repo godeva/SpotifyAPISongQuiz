@@ -129,7 +129,6 @@ app.post('/logOut', function (req, res) {
     }
 })
 
-
 app.use(express.static(path.join(__dirname, 'public/static')))
 
 app.use(cookieParser());
@@ -144,13 +143,11 @@ app.get('/lobby', lobbyHandler)
 
 app.get('/quiz.html', quizHandler)
 
+app.get('/quiz', quizHandler)
+
 app.get('/leaderboard.html', leaderboardHandler)
 
 app.get('/leaders', leadersGet)
-
-app.get('/quiz', function(req, res) {
-    res.sendFile(__dirname + '/public/quiz.html');
-});
 
 app.get('/login', function(req, res) {
 
@@ -311,9 +308,6 @@ app.post('/initUsername', function (req, res) {
   })
 })
 
-
-
-
 // GET: send a JSON of playerList
 app.get('/playerList', function (req, res) {
   	var content = JSON.stringify(playerList)
@@ -322,6 +316,9 @@ app.get('/playerList', function (req, res) {
 app.get('/activeList', function (req, res) {
 	var content = JSON.stringify(activeList)
   	res.send(content)
+})
+app.get('/getUser', function (req, res) {
+  res.send(req.session.name)
 })
 
 function indexOf (name, list) {

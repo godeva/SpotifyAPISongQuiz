@@ -89,6 +89,23 @@ $(document).ready(function() {
         $('#counter').html('Question: ' + 1);
     }
 
+    function newXHR (method, url, sender, handler) {
+        var req = new XMLHttpRequest()
+        req.onreadystatechange = function() {
+            handleRes(req, handler)
+        }
+        req.open(method, url, true)
+        sender(req)
+    }
+
+    function handleRes(req, handler) {
+        if( req.readyState !== XMLHttpRequest.DONE ) {
+            return
+        }
+        if(req.status === 200) {
+            handler (req)
+        }
+    }
 /*
     function getPlaylists() {
         return $.ajax({
@@ -170,10 +187,8 @@ $(document).ready(function() {
         event.preventDefault();
         if (!clicked) {
             clicked = true;
-            setTimeout(function() {
-                $(event.target.id).removeClass('hover');
-                showCorrectAnswer(event.target.id);
-            }, 500);
+            $(event.target.id).removeClass('hover');
+            showCorrectAnswer(event.target.id);
         }
     });
 
@@ -187,12 +202,14 @@ $(document).ready(function() {
             }
             updateScore();
             createQuestion();
-        }, 1000);
+        }, 1200);
     }
 
     function updateScore() {
         $('#score').html('Score: ' + score);
-        $('#counter').html('Question: ' + (count + 1));
+        if (count < tracks.length) {
+            $('#counter').html('Question: ' + (count + 1));
+        }
     }
 
     function setAnswer(response) {
@@ -302,9 +319,6 @@ $(document).ready(function() {
         }
     }
     */
-    //getUser(function () {
-    displayWelcome();
-    //-- Today's Top Hits --
     tracks = [
         {name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth'},
         {name: 'Young Dumb and Broke', artist: 'Khalid', artist_id: 'Khalid'},
@@ -317,6 +331,15 @@ $(document).ready(function() {
         {name: 'Sorry Not Sorry', artist: 'Demi Lovato', artist_id: 'Demi Lovato'},
         {name: 'Sativa', artist: 'Jhene Aeiko', artist_id: 'Jhene Aeiko'}
     ]
+
+    newXHR ('GET', '/getUser', function(req){req.send()}, function(req){
+        user = req.responseText
+        displayWelcome()
+        shuffleArray(tracks)
+        createQuestion()
+    })
+    //-- Today's Top Hits --
+    
 
 //     //     -- Get Turnt --
 //     tracks = [
@@ -374,8 +397,4 @@ $(document).ready(function() {
 //     {name: 'Brooke', artist: 'AxMod', artist_id: 'AxMod'},
 //     {name: 'Nobody But You', artist: 'KRANE', artist_id: 'KRANE'}
 // ]
-
-    shuffleArray(tracks);
-    createQuestion();
-    //}
 });
