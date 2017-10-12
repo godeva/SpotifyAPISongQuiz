@@ -15,8 +15,8 @@
 </body>
 
 <script>
-var names[];
-var scores[];
+var names = [];
+var scores = [];
 
 
 var httpRequest;
@@ -55,10 +55,12 @@ function handlePost(req) {
     buildList( leaders );
   }
 }
+console.log("getDBScores");
 
 getDBScores('/leaders');
 
 function getDBScores(url) {
+  console.log("getDBScores function");
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
     handleRes(req);

@@ -24,6 +24,17 @@ db.serialize(function() {
   db.run("DROP TABLE IF EXISTS leaderboard;")
   db.run("CREATE TABLE leaderboard (player varchar(100), score integer, playlist integer);");
 
+  // adding data
+  db.run("INSERT INTO leaderboard VALUES ('Ryan', 10, 6)");
+  db.run("INSERT INTO leaderboard VALUES ('Jackson', 5, 6)");
+  db.run("INSERT INTO leaderboard VALUES ('Connor', 4, 6)");
+
+  // querying data
+  db.each("SELECT player, score, playlist FROM leaderboard", function(err, row) {
+      console.log(row.player + " : " + row.score + " : " + row.playlist);
+  });
+
+
 });
 
 var generateRandomString = function(length) {
@@ -237,9 +248,27 @@ function leaderboardHandler (req, res) {
 }
 
 function leadersGet(req, res) {
-  
+  console.log("leaders get");
+  var output_players = []
+  db.each("SELECT player, score FROM leaderboard", function(err, row) {
+          //console.log("selecting: " + row.title + " : " + row.rating)
+          output = row.player; // + ": " + row.rating;
+          output_players.push(output)
+      }, function() {
+        console.log(output_players)
+        callbackSend(res, output_players);
+      });
 }
 
+
+function callbackSend(res, output_players) {
+  res.writeHead(200, {'Content-type': 'application/json'})
+  var output = JSON.stringify(output_players)
+  console.log("ouput created")
+  console.log(output)
+  res.write(output);
+  res.end();
+}
 
 // POST: store new player into playerList and store name in session
 app.post('/initUsername', function (req, res) {
