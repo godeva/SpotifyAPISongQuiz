@@ -38,6 +38,9 @@ function initUsername () {
 function initUsernameSender (req) {
 	var username = document.getElementById('inlineFormInput').value
     //req.send('name=' + username)
+
+    //remove double colons from anywhere in the input
+    username.replace("::", "");
     req.send(username)
 }
 

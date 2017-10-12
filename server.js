@@ -181,9 +181,9 @@ function leaderboardHandler (req, res) {
 function leadersGet(req, res) {
   console.log("leaders get");
   var output_players = []
-  db.each("SELECT player, score FROM leaderboard", function(err, row) {
+  db.each("SELECT player, score FROM leaderboard ORDER BY score", function(err, row) {
           //console.log("selecting: " + row.title + " : " + row.rating)
-          output = row.player; // + ": " + row.rating;
+          output = row.player + "::" + row.score; // + ": " + row.rating;
           output_players.push(output)
       }, function() {
         console.log(output_players)
@@ -195,8 +195,6 @@ function leadersGet(req, res) {
 function callbackSend(res, output_players) {
   res.writeHead(200, {'Content-type': 'application/json'})
   var output = JSON.stringify(output_players)
-  console.log("ouput created")
-  console.log(output)
   res.write(output);
   res.end();
 }
