@@ -8,7 +8,7 @@ $(document).ready(function() {
     var score = 0;
     var count = 0;
     var user = 'dude';
-    var playlistNumber;
+    var playlistName;
     var tracks = [];
 
     //var params = getHashParams();
@@ -68,7 +68,7 @@ $(document).ready(function() {
     function noPlaylists() {
         $('#welcome').fadeIn();
         $('#user').html('So ' + user+ ', this is awkward....');
-        $('#message').html('You have no playlists...');
+        $('#message').html("You didn't select a playlist...");
         $('#countdown').hide();
         setTimeout(function() {
         }, 4000);
@@ -319,7 +319,43 @@ $(document).ready(function() {
         }
     }
     */
-    tracks = [
+
+    newXHR ('GET', '/getGameData', function(req){req.send()}, function(req){
+        var data = JSON.parse(req.responseText)
+        user = data.name
+        playlistName = data.playlist
+        console.log('playlist: ' + playlistName)
+        switch (playlistName) {
+            case 'turnt':
+                tracks = tracks2
+                break
+            case 'top':
+                tracks = tracks3
+                break
+            case 'hot':
+                tracks = tracks1
+                break
+            case 'solid':
+                tracks = tracks4
+                break
+            case 'fresh':
+                tracks = tracks5
+                break
+            default:
+                tracks = []
+                break
+        }
+        if (tracks.length <= 0) {
+            noPlaylists()
+        }
+        displayWelcome()
+        shuffleArray(tracks)
+        createQuestion()
+    })
+    //-- Today's Top Hits --
+    
+// hot
+    var tracks1 = [
         {name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth'},
         {name: 'Young Dumb and Broke', artist: 'Khalid', artist_id: 'Khalid'},
         {name: 'Thunder', artist: 'Imagine Dragons', artist_id: 'Imagine Dragons'},
@@ -332,71 +368,60 @@ $(document).ready(function() {
         {name: 'Sativa', artist: 'Jhene Aeiko', artist_id: 'Jhene Aeiko'}
     ]
 
-    newXHR ('GET', '/getGameData', function(req){req.send()}, function(req){
-        var data = JSON.parse(req.responseText)
-        user = data.name
-        playlistNumber = data.playlist
-        displayWelcome()
-        shuffleArray(tracks)
-        createQuestion()
-    })
-    //-- Today's Top Hits --
-    
-
 //     //     -- Get Turnt --
-//     tracks = [
-//         {name: 'Rockstar', artist: 'Post Malone', artist_id: 'Post Malone'},
-//         {name: 'Slippery', artist: 'Migos', artist_id: 'Migos'},
-//         {name: 'Gucci Gang', artist: 'Lil Pump', artist_id: 'Lil Pump'},
-//         {name: 'Headlines', artist: 'Drake', artist_id: 'Drake'},
-//         {name: 'March Madness', artist: 'Future', artist_id: 'Future'},
-//         {name: 'Butterfly Effect', artist: 'Travis Scott', artist_id: 'Travis Scott'},
-//         {name: 'No Flockin', artist: 'Kodak Black', artist_id: 'Kodak Black'},
-//         {name: 'The Way Life Goes', artist: 'Lil Uzi Vert', artist_id: 'Lil Uzi Vert'},
-//         {name: 'Plain Jane', artist: 'A$AP Ferg', artist_id: 'A$AP Ferg'},
-//         {name: 'Ex Calling', artist: '6LACK', artist_id: '6LACK'}
-//     ]
+    var tracks2 = [
+        {name: 'Rockstar', artist: 'Post Malone', artist_id: 'Post Malone'},
+        {name: 'Slippery', artist: 'Migos', artist_id: 'Migos'},
+        {name: 'Gucci Gang', artist: 'Lil Pump', artist_id: 'Lil Pump'},
+        {name: 'Headlines', artist: 'Drake', artist_id: 'Drake'},
+        {name: 'March Madness', artist: 'Future', artist_id: 'Future'},
+        {name: 'Butterfly Effect', artist: 'Travis Scott', artist_id: 'Travis Scott'},
+        {name: 'No Flockin', artist: 'Kodak Black', artist_id: 'Kodak Black'},
+        {name: 'The Way Life Goes', artist: 'Lil Uzi Vert', artist_id: 'Lil Uzi Vert'},
+        {name: 'Plain Jane', artist: 'A$AP Ferg', artist_id: 'A$AP Ferg'},
+        {name: 'Ex Calling', artist: '6LACK', artist_id: '6LACK'}
+    ]
 //
 //     // -- Today's Top Hits --
-//     tracks = [
-//         {name: 'What Makes You Country', artist: 'Luke Bryan', artist_id: 'Luke Bryan'},
-//         {name: 'The Rest of our Life', artist: 'Tim McGraw', artist_id: 'Tim McGraw'},
-//         {name: 'Body Like a Backroad', artist: 'Sam Hunt', artist_id: 'Sam Hunt'},
-//         {name: 'Back to Us', artist: 'Rascal Flatts', artist_id: 'Rascal Flatts'},
-//         {name: 'All the Pretty Girls', artist: 'Kenny Chesney', artist_id: 'Kenny Chesney'},
-//         {name: 'Unforgettable', artist: 'Thomas Rhett', artist_id: 'Thomas Rhett'},
-//         {name: 'Smooth', artist: 'Florida Georgia Line', artist_id: 'Florida Georgia Line'},
-//         {name: 'Kiss Somebody', artist: 'Morgan Evans', artist_id: 'Morgan Evans'},
-//         {name: 'They Dont Know', artist: 'Jason Aldean', artist_id: 'Jason Aldean'},
-//         {name: 'Hooked', artist: 'Dylan Scott', artist_id: 'Dylan Scott'}
-//     ]
+    var tracks3 = [
+        {name: 'What Makes You Country', artist: 'Luke Bryan', artist_id: 'Luke Bryan'},
+        {name: 'The Rest of our Life', artist: 'Tim McGraw', artist_id: 'Tim McGraw'},
+        {name: 'Body Like a Backroad', artist: 'Sam Hunt', artist_id: 'Sam Hunt'},
+        {name: 'Back to Us', artist: 'Rascal Flatts', artist_id: 'Rascal Flatts'},
+        {name: 'All the Pretty Girls', artist: 'Kenny Chesney', artist_id: 'Kenny Chesney'},
+        {name: 'Unforgettable', artist: 'Thomas Rhett', artist_id: 'Thomas Rhett'},
+        {name: 'Smooth', artist: 'Florida Georgia Line', artist_id: 'Florida Georgia Line'},
+        {name: 'Kiss Somebody', artist: 'Morgan Evans', artist_id: 'Morgan Evans'},
+        {name: 'They Dont Know', artist: 'Jason Aldean', artist_id: 'Jason Aldean'},
+        {name: 'Hooked', artist: 'Dylan Scott', artist_id: 'Dylan Scott'}
+    ]
 //
 //
 // // -- Rock Solid --
-// tracks = [
-//     {name: 'Everlong', artist: 'Foo Fighters', artist_id: 'Foo Fighters'},
-//     {name: 'Numb', artist: 'Linkin Park', artist_id: 'Linkin Park'},
-//     {name: 'Uprising', artist: 'Muse', artist_id: 'Muse'},
-//     {name: 'Pardon Me', artist: 'Incubus', artist_id: 'Incubus'},
-//     {name: 'Miss Murder', artist: 'AFI', artist_id: 'AFI'},
-//     {name: 'Savior', artist: 'Rise Against', artist_id: 'Rise Against'},
-//     {name: 'Self Esteem', artist: 'The Offspring', artist_id: 'The Offspring'},
-//     {name: 'Sex on Fire', artist: 'Kings of Leon', artist_id: 'Kings of Leon'},
-//     {name: 'Hail to the King', artist: 'Avenged Sevenfold', artist_id: 'Avenged Sevenfold'},
-//     {name: 'Even Flow', artist: 'Pearl Jam', artist_id: 'Pearl Jam'}
-// ]
-//
-// // -- Fresh Electronic --
-// tracks = [
-//     {name: 'Jealousy', artist: 'Disciples', artist_id: 'Disciples'},
-//     {name: 'Dont Stop', artist: 'Tiesto', artist_id: 'Tiesto'},
-//     {name: 'Fever', artist: 'Nora En Pure', artist_id: 'Nora En Pure'},
-//     {name: 'Resolve', artist: 'Audien', artist_id: 'Audien'},
-//     {name: 'Revolt', artist: 'John Christian', artist_id: 'John Christian'},
-//     {name: 'Time For the Techno', artist: 'Carnage', artist_id: 'Carnage'},
-//     {name: 'Love Me', artist: 'Beau Collins', artist_id: 'Beau Collins'},
-//     {name: 'Once Upon a Time', artist: '7 Skies', artist_id: '7 Skies'},
-//     {name: 'Brooke', artist: 'AxMod', artist_id: 'AxMod'},
-//     {name: 'Nobody But You', artist: 'KRANE', artist_id: 'KRANE'}
-// ]
+    var tracks4 = [
+        {name: 'Everlong', artist: 'Foo Fighters', artist_id: 'Foo Fighters'},
+        {name: 'Numb', artist: 'Linkin Park', artist_id: 'Linkin Park'},
+        {name: 'Uprising', artist: 'Muse', artist_id: 'Muse'},
+        {name: 'Pardon Me', artist: 'Incubus', artist_id: 'Incubus'},
+        {name: 'Miss Murder', artist: 'AFI', artist_id: 'AFI'},
+        {name: 'Savior', artist: 'Rise Against', artist_id: 'Rise Against'},
+        {name: 'Self Esteem', artist: 'The Offspring', artist_id: 'The Offspring'},
+        {name: 'Sex on Fire', artist: 'Kings of Leon', artist_id: 'Kings of Leon'},
+        {name: 'Hail to the King', artist: 'Avenged Sevenfold', artist_id: 'Avenged Sevenfold'},
+        {name: 'Even Flow', artist: 'Pearl Jam', artist_id: 'Pearl Jam'}
+    ]
+    //
+    // // -- Fresh Electronic --
+    var tracks5 = [
+        {name: 'Jealousy', artist: 'Disciples', artist_id: 'Disciples'},
+        {name: 'Dont Stop', artist: 'Tiesto', artist_id: 'Tiesto'},
+        {name: 'Fever', artist: 'Nora En Pure', artist_id: 'Nora En Pure'},
+        {name: 'Resolve', artist: 'Audien', artist_id: 'Audien'},
+        {name: 'Revolt', artist: 'John Christian', artist_id: 'John Christian'},
+        {name: 'Time For the Techno', artist: 'Carnage', artist_id: 'Carnage'},
+        {name: 'Love Me', artist: 'Beau Collins', artist_id: 'Beau Collins'},
+        {name: 'Once Upon a Time', artist: '7 Skies', artist_id: '7 Skies'},
+        {name: 'Brooke', artist: 'AxMod', artist_id: 'AxMod'},
+        {name: 'Nobody But You', artist: 'KRANE', artist_id: 'KRANE'}
+    ]
 });
