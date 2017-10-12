@@ -227,10 +227,16 @@ $(document).ready(function() {
             //getRelatedArtists(tracks[count].artist_id).then(function(response) {
                 var response = {
                     artists:[
-                    {name: 'justin bieber'},
-                    {name: 'taylor swift'},
-                    {name: 'justin swift'},
-                    {name: 'taylor bieber'}]
+                    {name: 'Charlie Puth'},
+                    {name: 'Khalid'},
+                    {name: 'Imagine Dragons'},
+                    {name: 'Cardi B'},
+                    {name: 'Maroon 5'},
+                    {name: 'Avicii'},
+                    {name: 'SZA'},
+                    {name: 'Niall Horan'},
+                    {name: 'Demi Lovato'},
+                    {name: 'Lane Harrison'}]
                 }
                 shuffleArray(response.artists);
                 console.log(count)
@@ -276,8 +282,16 @@ $(document).ready(function() {
     */
     displayWelcome();
     tracks = [
-        {name: 'dwa', artist: 'justin bieber', artist_id: 'ggawdaiubwda'},
-        {name: 'dws', artist: 'taylor swift', artist_id: 'ggawdaiubwda'}
+        {name: 'How Long', artist: 'Charlie Puth', artist_id: 'Charlie Puth'},
+        {name: 'Young Dumb and Broke', artist: 'Khalid', artist_id: 'Khalid'},
+        {name: 'Thunder', artist: 'Imagine Dragons', artist_id: 'Imagine Dragons'},
+        {name: 'Bodak Yellow', artist: 'Cardi B', artist_id: 'Cardi B'},
+        {name: 'What Loves Do', artist: 'Maroon 5', artist_id: 'Maroon 5'},
+        {name: 'Lonely Together', artist: 'Avicii', artist_id: 'Avicii'},
+        {name: 'Love Galore', artist: 'SZA', artist_id: 'SZA'},
+        {name: 'Too Much To Ask', artist: 'Niall Horan', artist_id: 'Niall Horan'},
+        {name: 'Sorry Not Sorry', artist: 'Demi Lovato', artist_id: 'Demi Lovato'},
+        {name: 'Sativa', artist: 'Jhene Aeiko', artist_id: 'Jhene Aeiko'}
     ]
     shuffleArray(tracks);
     createQuestion();
