@@ -258,10 +258,34 @@ $(document).ready(function() {
         }
     }
 
-    
+    function sendScoreToDB() {
+        var xhr = new XMLHttpRequest();
+
+        if (!xhr) {
+            alert('giving up :( cannot create');
+            return false;
+        }
+
+        var message = user + ":" + score;
+        console.log(message)
+        xhr.onreadystatechange = handleDBUpdate;
+        xhr.open('POST', '/leaders');
+        xhr.send('score=' + message);
+    }
+
+    function handleDBUpdate(req) {
+      var req_targ = req.target; //whyyyy
+      if (req_targ.readyState !== XMLHttpRequest.DONE) {
+        return;
+      }
+
+      if (req_targ.status === 200) {
+        console.log("success");
+    }
 
     function createQuestion() {
         if (count == tracks.length) {
+            sendScoreToDB();
             $('#quiz').fadeOut(function() {
                 $('#welcome').fadeIn();
                 $('#user').html('Wow ' + user + '!');
