@@ -296,8 +296,7 @@ app.post('/leaders', function(req, res) {
          });
      }
  
-     });
-   
+     });  
  
  });
  
