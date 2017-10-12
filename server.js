@@ -283,8 +283,8 @@ app.post('/leaders', function(req, res) {
          return
        }
 
-       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + ";", function(err, row) {
-           output = row.player;
+       db.each("SELECT player, score FROM leaderboard WHERE playlist =" + input + " ORDER BY score;", function(err, row) {
+           output = row.player + "::" + row.score;
            output_players.push(output)
          }, function() {
            console.log("yas fam :)")
@@ -311,6 +311,7 @@ app.post('/leaders', function(req, res) {
       db.run("INSERT INTO leaderboard VALUES ('" + name + "', " + score + ", 0)");
 
       console.log("db updated");
+      callbackSend(res, "OK")
      }
  
      });  
