@@ -33,7 +33,7 @@ function updateSpecificPlaylist() {
   console.log(searchQuery)
   httpRequest.onreadystatechange = handlePost;
   httpRequest.open('POST', '/leaders');
-  httpRequest.send('query=' + searchQuery);
+  httpRequest.send('plist=' + searchQuery);
 }
 
 function handlePost(req) {
