@@ -122,8 +122,8 @@ $(document).ready(function() {
         var playPromise = audiotag.play();
 
     
-        // In browsers that don’t yet support this functionality,
-        // playPromise won’t be defined.
+        // In browsers that don?t yet support this functionality,
+        // playPromise won?t be defined.
         if (playPromise !== undefined) {
             playPromise.then(function () {
                 audiotag.play();
@@ -298,7 +298,28 @@ $(document).ready(function() {
             return false;
         }
 
-        var message = user + ":" + score;
+        var plist = 0;
+        switch (playlistName) {
+            case 'turnt':
+                plist = 1;
+                break
+            case 'top':
+                plist = 2;
+                break
+            case 'hot':
+                plist = 3;
+                break
+            case 'solid':
+                plist = 4;
+                break
+            case 'fresh':
+                plist = 5;
+                break
+            default:
+                break
+        }
+
+        var message = user + "::" + score + "::" + plist;
         console.log(message)
         xhr.onreadystatechange = handleDBUpdate;
         xhr.open('POST', '/leaders');

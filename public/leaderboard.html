@@ -13,7 +13,7 @@
     </div>
 
   <div class = "centerSquare">
-      <h1 style="text-align: center; color: white;" class = "leadHead"><u>Leaderboard</u></h1>
+      <h1 id= "leadertitle" style="text-align: center; color: white;" class = "leadHead"><u>Leaderboard</u></h1>
       <br>
       <br>
     
@@ -21,11 +21,11 @@
     <div style="margin: 0 auto;" class ="leadHolder">
       <table style="width: 800px; text-align: center; margin: 0 auto;">
           <tr>
-          <td><span class ="playlists hvr-float"><a href="#">Get Turnt</a></span></td>
-          <td><span class ="playlists hvr-float"><a href="#">Top Hits</a></span></td>
-          <td><span class ="playlists hvr-float"><a href="#">Country</a></span></td>
-          <td><span class ="playlists hvr-float"><a href="#">Rock Solid</a></span></td>
-          <td><span class ="playlists hvr-float"><a href="#">Electronic</a></span></td>
+          <td id = "list1"><span class ="playlists hvr-float">Get Turnt</span></td>
+          <td id = "list2"><span class ="playlists hvr-float">Top Hits</span></td>
+          <td id = "list3"><span class ="playlists hvr-float">Country</span></td>
+          <td id = "list4"><span class ="playlists hvr-float">Rock Solid</span></td>
+          <td id = "list5"><span class ="playlists hvr-float">Electronic</span></td>
         </tr>
       </table>    
 
@@ -54,7 +54,34 @@ var scores = [];
 
 var httpRequest;
 
-function updateSpecificPlaylist() {
+function addlisteners() {
+  document.getElementById("list1").addEventListener('click', filter1);
+  document.getElementById("list2").addEventListener('click', filter2);
+  document.getElementById("list3").addEventListener('click', filter3);
+  document.getElementById("list4").addEventListener('click', filter4);
+  document.getElementById("list5").addEventListener('click', filter5);
+  document.getElementById("leadertitle").addEventListener('click', getDBScores);
+}
+
+addlisteners();
+
+function filter1() {
+  filterList(1);
+}
+function filter2() {
+  filterList(2);
+}
+function filter3() {
+  filterList(3);
+}
+function filter4() {
+  filterList(4);
+}
+function filter5() {
+  filterList(5);
+}
+
+function filterList(index) {
   httpRequest = new XMLHttpRequest();
 
   if (!httpRequest) {
@@ -62,7 +89,7 @@ function updateSpecificPlaylist() {
     return false;
   }
 
-  var searchQuery = "testplaylist";
+  var searchQuery = index;
   console.log(searchQuery)
   httpRequest.onreadystatechange = handlePost;
   httpRequest.open('POST', '/leaders');
@@ -70,9 +97,6 @@ function updateSpecificPlaylist() {
 }
 
 function handlePost(req) {
-  console.log("handling post");
-  console.log(req);
-  console.log(req.target);
   var req_targ = req.target; //whyyyy
   if (req_targ.readyState !== XMLHttpRequest.DONE) {
     return;
@@ -81,25 +105,24 @@ function handlePost(req) {
   if (req_targ.status === 200) {
     console.log("2 hunna");
     var leaders = JSON.parse(req_targ.responseText);
-    console.log(leaders)
 //    localStorage.setItem('flights', req.responseText);
     //clear the inner html
-    document.querySelector("#board").innerHTML = "<tr><th>Player</th><th>Score</th></tr>";
+    document.querySelector("#board").innerHTML = "<tr><th>Rank</th><th>Player</th><th>Score</th></tr>";
     buildList( leaders );
   }
 }
 console.log("getDBScores");
 
-getDBScores('/leaders');
+getDBScores();
 
-function getDBScores(url) {
+function getDBScores() {
   console.log("getDBScores function");
   var req = new XMLHttpRequest();
   req.onreadystatechange = function() {
     handleRes(req);
   }
 
-  req.open('GET', url);
+  req.open('GET', '/leaders');
   req.send();
 }
 
@@ -115,6 +138,7 @@ function handleRes(req) {
     var leaders = JSON.parse(req.responseText);
     console.log(leaders)
 //    localStorage.setItem('flights', req.responseText);
+    document.querySelector("#board").innerHTML = "<tr><th>Rank</th><th>Player</th><th>Score</th></tr>";
     buildList( leaders );
   }
 }

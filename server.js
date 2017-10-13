@@ -25,9 +25,9 @@ db.serialize(function() {
   db.run("CREATE TABLE leaderboard (player varchar(100), score integer, playlist integer);");
 
   // adding data
-  db.run("INSERT INTO leaderboard VALUES ('Ryan', 10, 6)");
-  db.run("INSERT INTO leaderboard VALUES ('Jackson', 5, 6)");
-  db.run("INSERT INTO leaderboard VALUES ('Connor', 4, 6)");
+  db.run("INSERT INTO leaderboard VALUES ('Ryan', 10, 5)");
+  db.run("INSERT INTO leaderboard VALUES ('Jackson', 5, 2)");
+  db.run("INSERT INTO leaderboard VALUES ('Connor', 4, 5)");
 
   // querying data
   db.each("SELECT player, score, playlist FROM leaderboard", function(err, row) {
@@ -295,20 +295,23 @@ app.post('/leaders', function(req, res) {
      } else if (postdata.substring(0, 6) === "score=") {
       input = postdata.substring(6);
 
-      var breakIndex = input.indexOf(':');
-      if (breakIndex === -1) {
+      var breakIndex1 = input.indexOf('::');
+      if (breakIndex1 === -1) {
         console.log("could not find : break");
         return
       }
+      var breakIndex2 = input.indexOf("::", breakIndex1+2)
 
-      var name = input.substring(0, breakIndex);
-      var score = input.substring(breakIndex+1);
+      var name = input.substring(0, breakIndex1);
+      var score = input.substring(breakIndex1+2, breakIndex2);
+      var plist = input.substring(breakIndex2+2)
 
       console.log("new entry detected...");
       console.log(name);
       console.log(score);
+      console.log(plist);
 
-      db.run("INSERT INTO leaderboard VALUES ('" + name + "', " + score + ", 0)");
+      db.run("INSERT INTO leaderboard VALUES ('" + name + "', " + score + ", " + plist + ")");
 
       console.log("db updated");
       callbackSend(res, "OK")
