@@ -181,14 +181,11 @@ function buildTable (list) {
 
 // HF
 // log out before closing the browser
-window.onbeforeunload = function(event) {
+window.addEventListener("beforeunload", function (e) {
   newXHRRequest('POST', '/logOut', function(req){
     req.send('logout')
-  }, function(req){
-    socket.emit('getList')
-  })
-};
-
+  }, function(req){})          
+});
 
 //Have border appear on click
 /*
