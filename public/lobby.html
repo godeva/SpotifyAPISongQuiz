@@ -126,7 +126,7 @@ function selectPlaylist(name) {
   newXHRRequest('POST', '/selectPlaylist', function(req){
     req.send(name)
   }, function(req){
-    console.log('you select playlist ' + name)
+    //console.log('you select playlist ' + name)
   })
 }
 
@@ -190,10 +190,12 @@ window.onbeforeunload = function(event) {
 
 
 //Have border appear on click
+/*
 $('.playlist').on('click', function(e){
       e.preventDefault();
       $(this).toggleClass('playlistSelected');
     });
+    */
 
 </script>
 
