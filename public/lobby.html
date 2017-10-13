@@ -185,6 +185,7 @@ window.onbeforeunload = function(event) {
   newXHRRequest('POST', '/logOut', function(req){
     req.send('logout')
   }, function(req){
+    socket.emit('getList')
   })
 };
 
