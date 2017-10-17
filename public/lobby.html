@@ -19,23 +19,23 @@
         <table class ="votes">
         <tr>
             <td>
-                <a onclick="selectPlaylist('turnt')" class = "hvr-float-shadow"><img class = "playlist" src="images/turnt.jpg"></a>
+                <a onclick="selectPlaylist('turnt'); addBorderTurnt();" class = "hvr-float-shadow" ><img id="playTurnt" class = "playlist" src="images/turnt.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('top')" class = "hvr-float-shadow"><img class = "playlist" src="images/top.jpg"></a>
+                <a onclick="selectPlaylist('top'); addBorderTop();" class = "hvr-float-shadow"><img id="playTop" class = "playlist" src="images/top.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('hot')" class = "hvr-float-shadow"><img class = "playlist" src="images/hot.jpg"></a>
+                <a onclick="selectPlaylist('hot'); addBorderHot();" class = "hvr-float-shadow"><img id="playHot" class = "playlist" src="images/hot.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('solid')" class = "hvr-float-shadow"><img class = "playlist" src="images/solid.jpg"></a>
+                <a onclick="selectPlaylist('solid'); addBorderSolid();" class = "hvr-float-shadow"><img id="playSolid" class = "playlist" src="images/solid.jpg"></a>
 
             </td>
              <td>
-                <a onclick="selectPlaylist('fresh')" class = "hvr-float-shadow"><img class = "playlist" src="images/fresh.jpg"></a>
+                <a onclick="selectPlaylist('fresh'); addBorderFresh();" class = "hvr-float-shadow"><img id="playFresh" class = "playlist" src="images/fresh.jpg"></a>
 
             </td>
         </tr>
@@ -121,6 +121,49 @@ newXHRRequest('POST', '/logIn', function(req){req.send('login')}, function(req){
     console.log('your name is: '+yourname)
   }
 })
+
+/* PLAYLIST BORDER CSS */
+function addBorderTurnt() {
+    document.getElementById("playTurnt").setAttribute("class", "selectedPlaylist");
+    document.getElementById("playTop").setAttribute("class", "playlist"); 
+    document.getElementById("playHot").setAttribute("class", "playlist"); 
+    document.getElementById("playSolid").setAttribute("class", "playlist"); 
+    document.getElementById("playFresh").setAttribute("class", "playlist");  
+}
+
+function addBorderTop() {
+    document.getElementById("playTop").setAttribute("class", "selectedPlaylist");
+    document.getElementById("playTurnt").setAttribute("class", "playlist"); 
+    document.getElementById("playHot").setAttribute("class", "playlist"); 
+    document.getElementById("playSolid").setAttribute("class", "playlist"); 
+    document.getElementById("playFresh").setAttribute("class", "playlist");  
+}
+
+function addBorderHot() {
+    document.getElementById("playHot").setAttribute("class", "selectedPlaylist");
+    document.getElementById("playTop").setAttribute("class", "playlist"); 
+    document.getElementById("playTurnt").setAttribute("class", "playlist"); 
+    document.getElementById("playSolid").setAttribute("class", "playlist"); 
+    document.getElementById("playFresh").setAttribute("class", "playlist");  
+}
+
+function addBorderSolid() {
+    document.getElementById("playSolid").setAttribute("class", "selectedPlaylist");
+    document.getElementById("playTop").setAttribute("class", "playlist"); 
+    document.getElementById("playHot").setAttribute("class", "playlist"); 
+    document.getElementById("playTurnt").setAttribute("class", "playlist"); 
+    document.getElementById("playFresh").setAttribute("class", "playlist");  
+}
+
+function addBorderFresh() {
+    document.getElementById("playFresh").setAttribute("class", "selectedPlaylist");
+    document.getElementById("playTop").setAttribute("class", "playlist"); 
+    document.getElementById("playHot").setAttribute("class", "playlist"); 
+    document.getElementById("playSolid").setAttribute("class", "playlist"); 
+    document.getElementById("playTurnt").setAttribute("class", "playlist");  
+}
+
+/* DONE */
 
 function selectPlaylist(name) {
   newXHRRequest('POST', '/selectPlaylist', function(req){

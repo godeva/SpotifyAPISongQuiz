@@ -294,5 +294,14 @@ span.lead {
     border-radius: 25px;
 }
 
+.selectedPlaylist {
+   border-style: solid;
+   border-width: 5px;
+   border-color: darkgreen;
+   max-width: 200px;
+   max-height: 200px;
+
+}
+
 
 
