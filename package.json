@@ -1,8 +1,8 @@
 {
-  "name": "lh-4241-simple-node",
+  "name": "Spotify API Game",
   "version": "0.1.0",
-  "description": "WPI CS 4241 Final Project",
-  "author": "Nam Tran",
+  "description": "Webware Final Project",
+  "author": "Goutham Deva",
   "private": true,
   "scripts": {
     "start": "node server.js"

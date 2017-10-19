@@ -25,9 +25,7 @@ db.serialize(function() {
   db.run("CREATE TABLE leaderboard (player varchar(100), score integer, playlist integer);");
 
   // adding data
-  db.run("INSERT INTO leaderboard VALUES ('Ryan', 10, 5)");
-  db.run("INSERT INTO leaderboard VALUES ('Jackson', 5, 2)");
-  db.run("INSERT INTO leaderboard VALUES ('Connor', 4, 5)");
+  db.run("INSERT INTO leaderboard VALUES ('Supreme Leader', 10, 10)");
 
   // querying data
   db.each("SELECT player, score, playlist FROM leaderboard", function(err, row) {
@@ -316,11 +314,11 @@ app.post('/leaders', function(req, res) {
       console.log("db updated");
       callbackSend(res, "OK")
      }
- 
-     });  
- 
+
+     });
+
  });
- 
+
 
 
 // GET: send a JSON of playerList
